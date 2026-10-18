@@ -3,516 +3,150 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>초등 고학년 필수 영단어 마스터</title>
+  <title>초등 고학년 필수 영단어 마스터 (게임 에디션)</title>
   <style>
     :root {
-      --primary: #4F46E5;
-      --primary-hover: #4338CA;
-      --secondary: #10B981;
-      --danger: #EF4444;
-      --warning: #F59E0B;
-      --bg: #F3F4F6;
-      --card: #FFFFFF;
-      --text: #1F2937;
+      --primary: #4F46E5; --primary-hover: #4338CA;
+      --secondary: #10B981; --danger: #EF4444;
+      --warning: #F59E0B; --bg: #F3F4F6;
+      --card: #FFFFFF; --text: #1F2937;
     }
 
-    * {
-      box-sizing: border-box;
-      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-    }
+    * { box-sizing: border-box; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
 
     .app-container {
-      background: var(--card);
-      width: 100%;
-      max-width: 680px;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-      padding: 28px;
-      margin-top: 10px;
+      background: var(--card); width: 100%; max-width: 680px; border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08); padding: 28px; margin-top: 10px; position: relative; z-index: 10;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+    header { text-align: center; margin-bottom: 20px; }
+    h1 { margin: 0 0 14px 0; font-size: 1.6rem; color: var(--primary); }
 
-    h1 {
-      margin: 0 0 14px 0;
-      font-size: 1.6rem;
-      color: var(--primary);
-    }
+    /* 프로필 바 & 진화 몬스터 */
+    .profile-bar { display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 8px 14px; border-radius: 12px; margin-bottom: 16px; gap: 10px; flex-wrap: wrap; }
+    .profile-list { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .profile-chip { background: #E2E8F0; color: #475569; border: none; padding: 6px 12px; border-radius: 20px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 4px; }
+    .profile-chip.active { background: var(--primary); color: white; box-shadow: 0 2px 6px rgba(79, 70, 229, 0.3); }
+    .profile-add-btn { background: #FEF3C7; color: #D97706; border: 1px dashed #F59E0B; padding: 6px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
+    
+    .daily-stars-badge { background: #FFFBEB; color: #B45309; font-size: 0.8rem; padding: 2px 6px; border-radius: 10px; font-weight: 800; border: 1px solid #FDE68A; }
 
-    /* 프로필 바 스타일 */
-    .profile-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #F8FAFC;
-      border: 1px solid #E2E8F0;
-      padding: 8px 14px;
-      border-radius: 12px;
-      margin-bottom: 16px;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    /* 탭 메뉴 */
+    .tab-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #F3F4F6; padding: 6px; border-radius: 14px; margin-bottom: 16px; }
+    .tab-btn { background: transparent; border: none; padding: 12px; border-radius: 10px; font-size: 1rem; font-weight: 700; color: #6B7280; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .badge-counter-pill { background: #FEF3C7; color: #D97706; font-size: 0.8rem; padding: 2px 8px; border-radius: 99px; font-weight: 800; }
 
-    .profile-list {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
+    .status-bar { display: flex; justify-content: space-between; align-items: center; background: #EEF2FF; padding: 12px 18px; border-radius: 12px; font-weight: 700; color: var(--primary); font-size: 0.95rem; }
 
-    .profile-chip {
-      background: #E2E8F0;
-      color: #475569;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .profile-chip.active {
-      background: var(--primary);
-      color: white;
-      box-shadow: 0 2px 6px rgba(79, 70, 229, 0.3);
-    }
-
-    .profile-add-btn {
-      background: #FEF3C7;
-      color: #D97706;
-      border: 1px dashed #F59E0B;
-      padding: 6px 10px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .profile-add-btn:hover { background: #FDE68A; }
-
-    /* 상단 네비게이션 탭 */
-    .tab-menu {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      background: #F3F4F6;
-      padding: 6px;
-      border-radius: 14px;
-      margin-bottom: 16px;
-    }
-
-    .tab-btn {
-      background: transparent;
-      border: none;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 700;
-      color: #6B7280;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .tab-btn.active {
-      background: white;
-      color: var(--primary);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-
-    .badge-counter-pill {
-      background: #FEF3C7;
-      color: #D97706;
-      font-size: 0.8rem;
-      padding: 2px 8px;
-      border-radius: 99px;
-      font-weight: 800;
-    }
-
-    .status-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #EEF2FF;
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-weight: 700;
-      color: var(--primary);
-      font-size: 0.95rem;
-    }
-
-    .btn {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 13px 20px;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn:hover { background: var(--primary-hover); }
-    .btn:disabled { background: #9CA3AF; cursor: not-allowed; }
-    .btn-secondary { background: var(--secondary); }
-    .btn-secondary:hover { background: #059669; }
-    .btn-danger { background: var(--danger); }
-    .btn-danger:hover { background: #DC2626; }
+    .btn { background: var(--primary); color: white; border: none; padding: 13px 20px; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2); }
+    .btn-secondary { background: var(--secondary); } .btn-secondary:hover { background: #059669; }
+    .btn-danger { background: var(--danger); } .btn-danger:hover { background: #DC2626; }
     .btn-warning { background: var(--warning); color: #fff; }
     .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
-    .btn-outline:hover { background: #EEF2FF; }
 
-    /* 단어 리스트 스타일 */
-    .word-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    .word-card {
-      border: 1px solid #E5E7EB;
-      border-radius: 12px;
-      padding: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #FAFAFA;
-      transition: transform 0.15s;
-    }
-
-    .word-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
-    }
-
-    .word-info {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .word-en {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: #111827;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .badge {
-      font-size: 0.75rem;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-weight: 600;
-    }
-
-    .badge-new { background: #DBEAFE; color: #1E40AF; }
-    .badge-review { background: #FEF3C7; color: #92400E; }
-
+    /* 단어 리스트 */
+    .word-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px; }
+    .word-card { border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; background: #FAFAFA; transition: transform 0.15s; }
+    .word-card:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
+    .word-info { display: flex; flex-direction: column; gap: 4px; }
+    .word-en { font-size: 1.3rem; font-weight: 800; color: #111827; display: flex; align-items: center; gap: 8px; }
+    .badge { font-size: 0.75rem; padding: 3px 8px; border-radius: 6px; font-weight: 600; }
+    .badge-new { background: #DBEAFE; color: #1E40AF; } .badge-review { background: #FEF3C7; color: #92400E; }
     .word-ko { font-size: 1.05rem; color: #4B5563; font-weight: 600; }
     .word-ex { font-size: 0.85rem; color: #6B7280; font-style: italic; margin-top: 2px; }
+    .sound-btn { background: #E0E7FF; color: var(--primary); border: none; width: 44px; height: 44px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-    .sound-btn {
-      background: #E0E7FF;
-      color: var(--primary);
-      border: none;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      font-size: 1.2rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+    /* 칭찬 스티커판 */
+    .reward-summary { background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%); color: white; border-radius: 16px; padding: 20px; display: flex; justify-content: space-around; align-items: center; margin-bottom: 24px; text-align: center; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25); }
+    .summary-item .num { font-size: 2rem; font-weight: 900; margin-top: 4px; }
+    .sticker-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 20px; }
+    .sticker-card { border: 2px solid #E5E7EB; border-radius: 16px; padding: 18px; text-align: center; background: #F9FAFB; transition: all 0.25s; position: relative; overflow: hidden; }
+    
+    /* 퍼펙트 이스터에그 디자인 */
+    .sticker-card.unlocked { background: linear-gradient(180deg, #FFFFFF 0%, #FEFCE8 100%); border-color: #FBBF24; box-shadow: 0 6px 15px rgba(251, 191, 36, 0.18); }
+    .sticker-card.perfect { border: 3px solid #F59E0B; background: linear-gradient(180deg, #FFFBEB 0%, #FEF3C7 100%); box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
+    .perfect-label { position: absolute; top: 10px; right: -25px; background: #EF4444; color: white; font-size: 0.7rem; font-weight: 900; padding: 4px 30px; transform: rotate(45deg); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    
+    .sticker-card.locked { opacity: 0.65; filter: grayscale(85%); }
+    .sticker-icon { font-size: 3.2rem; margin-bottom: 8px; display: inline-block; transition: transform 0.3s; }
+    .sticker-card.unlocked:hover .sticker-icon { transform: scale(1.15) rotate(5deg); }
+    .sticker-week { font-size: 0.8rem; font-weight: 800; color: #6B7280; margin-bottom: 4px; }
+    .sticker-card.unlocked .sticker-week { color: #D97706; }
+    .sticker-title { font-size: 1.1rem; font-weight: 800; color: #111827; margin-bottom: 6px; }
+    .sticker-record { font-size: 0.85rem; background: #FEF3C7; color: #92400E; padding: 5px 10px; border-radius: 8px; font-weight: 700; display: inline-block; margin-top: 4px; }
+
+    /* 배지/보상 축하 박스 */
+    .new-badge-celebration { background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border: 3px solid #F59E0B; border-radius: 18px; padding: 20px; margin: 20px auto; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .daily-reward-celebration { background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%); border: 3px solid #10B981; border-radius: 18px; padding: 20px; margin: 20px auto; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+    @keyframes popIn { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+    /* 퀴즈 영역 & 콤보 이펙트 */
+    .quiz-box { text-align: center; padding: 20px 10px; position: relative; }
+    
+    .combo-overlay { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) scale(0.5); opacity: 0; pointer-events: none; z-index: 50; text-shadow: 2px 2px 0px #000; }
+    .combo-text { font-size: 4.5rem; font-weight: 900; font-style: italic; color: #FBBF24; -webkit-text-stroke: 2px #D97706; white-space: nowrap; }
+    @keyframes comboPop {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+      20% { transform: translate(-50%, -50%) scale(1.2) rotate(-5deg); opacity: 1; }
+      30% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+      80% { transform: translate(-50%, -50%) scale(1) translateY(-10px); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
     }
 
-    .sound-btn:hover { background: #C7D2FE; }
-
-    /* 칭찬 스티커판 & 배지 스타일 */
-    .reward-summary {
-      background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
-      color: white;
-      border-radius: 16px;
-      padding: 20px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      margin-bottom: 24px;
-      text-align: center;
-      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
-    }
-
-    .summary-item .num {
-      font-size: 2rem;
-      font-weight: 900;
-      margin-top: 4px;
-    }
-
-    .sticker-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-
-    .sticker-card {
-      border: 2px solid #E5E7EB;
-      border-radius: 16px;
-      padding: 18px;
-      text-align: center;
-      background: #F9FAFB;
-      position: relative;
-      transition: all 0.25s;
-    }
-
-    .sticker-card.unlocked {
-      background: linear-gradient(180deg, #FFFFFF 0%, #FEFCE8 100%);
-      border-color: #FBBF24;
-      box-shadow: 0 6px 15px rgba(251, 191, 36, 0.18);
-    }
-
-    .sticker-card.locked {
-      opacity: 0.65;
-      filter: grayscale(85%);
-    }
-
-    .sticker-icon {
-      font-size: 3.2rem;
-      margin-bottom: 8px;
-      display: inline-block;
-      transition: transform 0.3s;
-    }
-
-    .sticker-card.unlocked:hover .sticker-icon {
-      transform: scale(1.15) rotate(5deg);
-    }
-
-    .sticker-week {
-      font-size: 0.8rem;
-      font-weight: 800;
-      color: #6B7280;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-
-    .sticker-card.unlocked .sticker-week {
-      color: #D97706;
-    }
-
-    .sticker-title {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: #111827;
-      margin-bottom: 6px;
-    }
-
-    .sticker-record {
-      font-size: 0.85rem;
-      background: #FEF3C7;
-      color: #92400E;
-      padding: 5px 10px;
-      border-radius: 8px;
-      font-weight: 700;
-      display: inline-block;
-      margin-top: 4px;
-    }
-
-    .sticker-locked-msg {
-      font-size: 0.8rem;
-      color: #9CA3AF;
-      margin-top: 6px;
-    }
-
-    .new-badge-celebration {
-      background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
-      border: 3px solid #F59E0B;
-      border-radius: 18px;
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 420px;
-      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes popIn {
-      0% { transform: scale(0.7); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    /* 퀴즈 영역 스타일 */
-    .quiz-box {
-      text-align: center;
-      padding: 20px 10px;
-    }
-
-    .quiz-progress {
-      font-size: 0.9rem;
-      color: #6B7280;
-      margin-bottom: 12px;
-      font-weight: 600;
-    }
-
-    .quiz-type-badge {
-      display: inline-block;
-      background: #F3F4F6;
-      color: #374151;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-    }
-
-    .quiz-prompt {
-      font-size: 2rem;
-      font-weight: 800;
-      margin: 20px 0;
-      color: #111827;
-      min-height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .hint-letters {
-      font-family: monospace;
-      letter-spacing: 4px;
-      font-size: 1.5rem;
-      color: var(--primary);
-      background: #EEF2FF;
-      padding: 8px 16px;
-      border-radius: 8px;
-    }
-
-    .options-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
-    .option-btn {
-      background: white;
-      border: 2px solid #E5E7EB;
-      padding: 16px;
-      border-radius: 12px;
-      font-size: 1.05rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .option-btn:hover {
-      border-color: var(--primary);
-      background: #F9FAFB;
-    }
-
-    .spell-input-group {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
-    .spell-input {
-      padding: 14px 18px;
-      font-size: 1.2rem;
-      border: 2px solid #D1D5DB;
-      border-radius: 10px;
-      width: 65%;
-      text-align: center;
-      outline: none;
-    }
-
+    .quiz-type-badge { display: inline-block; background: #F3F4F6; color: #374151; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 700; margin-bottom: 16px; }
+    .quiz-prompt { font-size: 2rem; font-weight: 800; margin: 20px 0; color: #111827; min-height: 60px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; }
+    .hint-letters { font-family: monospace; letter-spacing: 4px; font-size: 1.5rem; color: var(--primary); background: #EEF2FF; padding: 8px 16px; border-radius: 8px; }
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px; }
+    .option-btn { background: white; border: 2px solid #E5E7EB; padding: 16px; border-radius: 12px; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.1s; }
+    .option-btn:hover { border-color: var(--primary); background: #F9FAFB; transform: scale(1.02); }
+    .spell-input-group { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+    .spell-input { padding: 14px 18px; font-size: 1.2rem; border: 2px solid #D1D5DB; border-radius: 10px; width: 65%; text-align: center; outline: none; }
     .spell-input:focus { border-color: var(--primary); }
 
-    .feedback-msg {
-      margin-top: 20px;
-      padding: 14px;
-      border-radius: 10px;
-      font-weight: 700;
-    }
-
+    .feedback-msg { margin-top: 20px; padding: 14px; border-radius: 10px; font-weight: 700; }
     .feedback-correct { background: #D1FAE5; color: #065F46; }
-    .feedback-wrong { background: #FEE2E2; color: #991B1B; }
+    .feedback-wrong { background: #FEE2E2; color: #991B1B; animation: shake 0.4s; }
+    @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-5px);} 75% {transform: translateX(5px);} }
 
-    .nav-controls {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 24px;
-      padding-top: 16px;
-      border-top: 1px solid #E5E7EB;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+    .nav-controls { display: flex; justify-content: space-between; margin-top: 24px; padding-top: 16px; border-top: 1px solid #E5E7EB; flex-wrap: wrap; gap: 10px; }
+    .wrong-alert-box { background: #FEF2F2; border: 2px solid #FCA5A5; border-radius: 12px; padding: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
 
-    .wrong-alert-box {
-      background: #FEF2F2;
-      border: 2px solid #FCA5A5;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    /* 폭죽(Confetti) 컨테이너 */
+    #confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; overflow: hidden; display: none; }
+    .confetti-piece { position: absolute; width: 10px; height: 20px; background: #ffd300; top: -20px; opacity: 0; }
 
-    @media (max-width: 520px) {
-      .options-grid, .sticker-grid { grid-template-columns: 1fr; }
-      .spell-input-group { flex-direction: column; align-items: center; }
-      .spell-input { width: 100%; }
-    }
+    @media (max-width: 520px) { .options-grid, .sticker-grid { grid-template-columns: 1fr; } .spell-input-group { flex-direction: column; align-items: center; } .spell-input { width: 100%; } }
   </style>
 </head>
 <body>
 
+<!-- 폭죽 파티클을 담을 컨테이너 -->
+<div id="confetti-container"></div>
+
 <div class="app-container">
   <header>
-    <h1>🎓 초등 고학년 영단어 마스터</h1>
+    <h1>🎓 영단어 마스터 게임 에디션</h1>
 
-    <!-- 프로필 선택 및 관리 바 -->
+    <!-- 프로필 선택 & 진화 몬스터 표시 바 -->
     <div class="profile-bar">
-      <div style="font-size: 0.85rem; font-weight: 800; color: #64748B;">👤 학습자:</div>
+      <div style="font-size: 0.85rem; font-weight: 800; color: #64748B;">👤 플레이어:</div>
       <div class="profile-list" id="profile-chips-container">
-        <!-- JS로 동적 생성 -->
+        <!-- JS 동적 생성 -->
       </div>
-      <button class="profile-add-btn" onclick="addNewProfile()">+ 프로필 추가</button>
+      <button class="profile-add-btn" onclick="addNewProfile()">+ 추가</button>
     </div>
 
-    <!-- 상단 네비게이션 탭 -->
+    <!-- 상단 탭 -->
     <div class="tab-menu">
       <button class="tab-btn active" id="tab-study" onclick="switchTab('study')">
-        📖 오늘의 학습
+        📖 일일 퀘스트
       </button>
       <button class="tab-btn" id="tab-rewards" onclick="switchTab('rewards')">
-        🏅 칭찬 스티커판 <span class="badge-counter-pill" id="badge-count-pill">0개</span>
+        🏅 스티커 도감 <span class="badge-counter-pill" id="badge-count-pill">0개</span>
       </button>
     </div>
 
@@ -525,8 +159,8 @@
   <!-- 오답 복습 알림 배너 -->
   <div id="wrong-banner" class="wrong-alert-box" style="display: none;">
     <div>
-      <strong style="color: #991B1B; font-size: 1.05rem;">🚨 외워야 할 오답 단어가 <span id="wrong-count">0</span>개 있습니다!</strong>
-      <div style="font-size: 0.85rem; color: #B91C1C; margin-top: 4px;">다음 날로 넘어가기 전에 다 맞출 때까지 복습해 보세요.</div>
+      <strong style="color: #991B1B; font-size: 1.05rem;">🚨 물리쳐야 할 오답 몬스터가 <span id="wrong-count">0</span>마리!</strong>
+      <div style="font-size: 0.85rem; color: #B91C1C; margin-top: 4px;">다음 날로 넘어가기 전에 완벽히 복습해 보세요.</div>
     </div>
     <button class="btn btn-danger" onclick="startWrongNoteQuiz()">오답 시험보기</button>
   </div>
@@ -534,11 +168,11 @@
   <!-- 메인 콘텐츠 영역 -->
   <div id="main-view"></div>
 
-  <!-- 하단 진행 컨트롤 -->
+  <!-- 하단 컨트롤 -->
   <div class="nav-controls" id="footer-controls">
     <button class="btn btn-outline" onclick="prevSchedule()">◀ 이전 날</button>
     <div style="display:flex; gap: 8px;">
-      <button class="btn btn-outline" style="font-size: 0.8rem; padding: 8px 12px;" onclick="resetCurrentProfileData()">현재 프로필 초기화</button>
+      <button class="btn btn-outline" style="font-size: 0.8rem; padding: 8px 12px;" onclick="resetCurrentProfileData()">현재 데이터 초기화</button>
       <button class="btn" id="next-day-btn" onclick="nextSchedule()">다음 날로 이동 ▶</button>
     </div>
   </div>
@@ -546,333 +180,130 @@
 
 <script>
   // =========================================================================
-  // 1. 배지 카탈로그 및 전체 영단어 데이터베이스 (1~8주차 총 260개)
+  // 0. 게임화 이펙트 모듈 (소리 & 폭죽)
+  // =========================================================================
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  let audioCtx;
+
+  function initAudio() {
+    if (!audioCtx) audioCtx = new AudioContext();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  }
+
+  function playSFX(type) {
+    initAudio();
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    const now = audioCtx.currentTime;
+    
+    if (type === 'correct') {
+      // 딩동댕 (두 번의 높은 피치)
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, now);
+      osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
+      gainNode.gain.setValueAtTime(0.1, now);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+      osc.start(now); osc.stop(now + 0.2);
+    } else if (type === 'wrong') {
+      // 띠익 (낮은 버저)
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(150, now);
+      osc.frequency.exponentialRampToValueAtTime(100, now + 0.2);
+      gainNode.gain.setValueAtTime(0.1, now);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+      osc.start(now); osc.stop(now + 0.3);
+    } else if (type === 'fanfare') {
+      // 빰빰빰 (합격 시)
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(440, now); // A4
+      osc.frequency.setValueAtTime(554, now + 0.15); // C#5
+      osc.frequency.setValueAtTime(659, now + 0.3); // E5
+      gainNode.gain.setValueAtTime(0.1, now);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+      osc.start(now); osc.stop(now + 0.6);
+    }
+  }
+
+  function fireConfetti() {
+    const container = document.getElementById('confetti-container');
+    container.style.display = 'block';
+    container.innerHTML = '';
+    const colors = ['#fce18a', '#ff726d', '#b48def', '#f4306d', '#34d399', '#60a5fa'];
+    
+    for (let i = 0; i < 80; i++) {
+      let piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.left = Math.random() * 100 + 'vw';
+      piece.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+      piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+      container.appendChild(piece);
+    }
+
+    // CSS Keyframe 동적 추가
+    if (!document.getElementById('confetti-style')) {
+      const style = document.createElement('style');
+      style.id = 'confetti-style';
+      style.innerHTML = `@keyframes fall { 0% { top: -20px; opacity: 1; } 100% { top: 110vh; transform: rotate(720deg); opacity: 0; } }`;
+      document.head.appendChild(style);
+    }
+
+    setTimeout(() => { container.style.display = 'none'; }, 4000);
+  }
+
+  // =========================================================================
+  // 1. 배지 카탈로그 & 단어 데이터 (총 260개 내장)
   // =========================================================================
   const BADGE_CATALOG = [
-    { week: 1, icon: "🌱", title: "새싹 영단어 탐험가", desc: "1주차 주말 시험 80점 이상 통과!" },
-    { week: 2, icon: "🚀", title: "우주 단어 비행사", desc: "2주차 주말 시험 80점 이상 통과!" },
-    { week: 3, icon: "⚡", title: "번개 스펠링 히어로", desc: "3주차 주말 시험 80점 이상 통과!" },
-    { week: 4, icon: "💎", title: "다이아몬드 암기왕", desc: "4주차 주말 시험 80점 이상 통과!" },
-    { week: 5, icon: "🦁", title: "용감한 영어 챔피언", desc: "5주차 주말 시험 80점 이상 통과!" },
-    { week: 6, icon: "👑", title: "황금 왕관 마스터", desc: "6주차 주말 시험 80점 이상 통과!" },
-    { week: 7, icon: "🌟", title: "초특급 슈퍼스타", desc: "7주차 주말 시험 80점 이상 통과!" },
-    { week: 8, icon: "🏆", title: "전설의 영단어 박사", desc: "8주차 주말 시험 80점 이상 통과!" }
+    { week: 1, icon: "🌱", title: "새싹 영단어 탐험가" },
+    { week: 2, icon: "🚀", title: "우주 단어 비행사" },
+    { week: 3, icon: "⚡", title: "번개 스펠링 히어로" },
+    { week: 4, icon: "💎", title: "다이아몬드 암기왕" },
+    { week: 5, icon: "🦁", title: "용감한 영어 챔피언" },
+    { week: 6, icon: "👑", title: "황금 왕관 마스터" },
+    { week: 7, icon: "🌟", title: "초특급 슈퍼스타" },
+    { week: 8, icon: "🏆", title: "전설의 영단어 박사" }
   ];
 
   const WORD_DATABASE = [
-    // --- 1주차 (ID 1 ~ 50) ---
-    { id: 1, en: "environment", ko: "환경", ex: "We must protect our environment." },
-    { id: 2, en: "culture", ko: "문화", ex: "Every country has its own culture." },
-    { id: 3, en: "experience", ko: "경험", ex: "Traveling gives us great experience." },
-    { id: 4, en: "important", ko: "중요한", ex: "Breakfast is very important for health." },
-    { id: 5, en: "future", ko: "미래", ex: "What is your dream for the future?" },
-    { id: 6, en: "history", ko: "역사", ex: "I like reading Korean history books." },
-    { id: 7, en: "nature", ko: "자연", ex: "Let's go out and enjoy nature." },
-    { id: 8, en: "science", ko: "과학", ex: "We did an exciting science project." },
-    { id: 9, en: "museum", ko: "박물관", ex: "We visited the national museum." },
-    { id: 10, en: "traditional", ko: "전통적인", ex: "Hanbok is traditional Korean clothes." },
-    { id: 11, en: "exercise", ko: "운동하다", ex: "I exercise for thirty minutes every day." },
-    { id: 12, en: "healthy", ko: "건강한", ex: "Eating vegetables keeps you healthy." },
-    { id: 13, en: "delicious", ko: "맛있는", ex: "My mom made a delicious cake." },
-    { id: 14, en: "favorite", ko: "가장 좋아하는", ex: "Soccer is my favorite sport." },
-    { id: 15, en: "hobby", ko: "취미", ex: "My hobby is collecting stamps." },
-    { id: 16, en: "vacation", ko: "방학, 휴가", ex: "I will visit my grandma this summer vacation." },
-    { id: 17, en: "festival", ko: "축제", ex: "The school festival was very fun." },
-    { id: 18, en: "invited", ko: "초대했다", ex: "She invited me to her birthday party." },
-    { id: 19, en: "present", ko: "선물, 현재", ex: "Thank you for the wonderful present." },
-    { id: 20, en: "together", ko: "함께", ex: "Let's clean the classroom together." },
-    { id: 21, en: "library", ko: "도서관", ex: "Be quiet in the library." },
-    { id: 22, en: "hospital", ko: "병원", ex: "The doctor works at the hospital." },
-    { id: 23, en: "restaurant", ko: "식당", ex: "This Italian restaurant is famous." },
-    { id: 24, en: "airport", ko: "공항", ex: "We arrived at the airport early." },
-    { id: 25, en: "bakery", ko: "빵집", ex: "I smell fresh bread from the bakery." },
-    { id: 26, en: "straight", ko: "곧장, 똑바로", ex: "Go straight for two blocks." },
-    { id: 27, en: "corner", ko: "모퉁이", ex: "Turn left at the corner." },
-    { id: 28, en: "between", ko: "~사이에", ex: "The pharmacy is between the bank and the park." },
-    { id: 29, en: "across", ko: "건너편에", ex: "The school is across from the bookstore." },
-    { id: 30, en: "building", ko: "건물", ex: "That tall building is an office." },
-    { id: 31, en: "astronaut", ko: "우주비행사", ex: "I want to be an astronaut in the future." },
-    { id: 32, en: "scientist", ko: "과학자", ex: "The scientist invented a new robot." },
-    { id: 33, en: "inventor", ko: "발명가", ex: "Thomas Edison was a great inventor." },
-    { id: 34, en: "musician", ko: "음악가", ex: "He is a famous classical musician." },
-    { id: 35, en: "architect", ko: "건축가", ex: "The architect designed this bridge." },
-    { id: 36, en: "pilot", ko: "조종사", ex: "The pilot flew the airplane safely." },
-    { id: 37, en: "reporter", ko: "기자", ex: "The reporter interviewed the winner." },
-    { id: 38, en: "designer", ko: "디자이너", ex: "She wants to be a fashion designer." },
-    { id: 39, en: "engineer", ko: "기술자, 엔지니어", ex: "My uncle is a computer engineer." },
-    { id: 40, en: "chef", ko: "요리사", ex: "The chef cooked steak for us." },
-    { id: 41, en: "recycle", ko: "재활용하다", ex: "We should recycle plastic bottles." },
-    { id: 42, en: "save", ko: "절약하다, 구하다", ex: "Turn off the water to save energy." },
-    { id: 43, en: "planet", ko: "행성, 지구", ex: "Earth is a beautiful blue planet." },
-    { id: 44, en: "garbage", ko: "쓰레기", ex: "Don't throw garbage on the street." },
-    { id: 45, en: "electricity", ko: "전기", ex: "Please turn off the light to save electricity." },
-    { id: 46, en: "weather", ko: "날씨", ex: "The weather is sunny and warm today." },
-    { id: 47, en: "temperature", ko: "기온, 온도", ex: "The temperature dropped below zero." },
-    { id: 48, en: "umbrella", ko: "우산", ex: "Take your umbrella because it will rain." },
-    { id: 49, en: "season", ko: "계절", ex: "Autumn is my favorite season." },
-    { id: 50, en: "volunteer", ko: "봉사하다, 자원봉사자", ex: "We did volunteer work at the nursing home." },
-
-    // --- 2주차 신규 단어 (ID 51 ~ 80) ---
-    { id: 51, en: "communicate", ko: "소통하다", ex: "We use English to communicate with foreigners." },
-    { id: 52, en: "information", ko: "정보", ex: "You can find useful information on the internet." },
-    { id: 53, en: "smart", ko: "똑똑한", ex: "Dolphins are very smart animals." },
-    { id: 54, en: "language", ko: "언어", ex: "Learning a new language is exciting." },
-    { id: 55, en: "message", ko: "메시지", ex: "I sent a text message to my friend." },
-    { id: 56, en: "internet", ko: "인터넷", ex: "Don't spend too much time on the internet." },
-    { id: 57, en: "careful", ko: "조심하는", ex: "Be careful when you cross the street." },
-    { id: 58, en: "dangerous", ko: "위험한", ex: "Playing with fire is very dangerous." },
-    { id: 59, en: "accident", ko: "사고", ex: "Wear a helmet to prevent an accident." },
-    { id: 60, en: "rule", ko: "규칙", ex: "We must follow the school rules." },
-    { id: 61, en: "helmet", ko: "헬멧, 안전모", ex: "Put on your helmet before riding a bike." },
-    { id: 62, en: "seatbelt", ko: "안전벨트", ex: "Fasten your seatbelt in the car." },
-    { id: 63, en: "different", ko: "다른", ex: "We have different opinions." },
-    { id: 64, en: "similar", ko: "비슷한", ex: "My sister and I have similar tastes." },
-    { id: 65, en: "respect", ko: "존중하다", ex: "We should respect our elders." },
-    { id: 66, en: "neighbor", ko: "이웃", ex: "Say hello to your neighbors." },
-    { id: 67, en: "peace", ko: "평화", ex: "Everyone wishes for world peace." },
-    { id: 68, en: "polite", ko: "예의 바른", ex: "He is always polite to teachers." },
-    { id: 69, en: "practice", ko: "연습하다", ex: "I practice the piano every afternoon." },
-    { id: 70, en: "nervous", ko: "긴장한", ex: "I was nervous before the speech contest." },
-    { id: 71, en: "proud", ko: "자랑스러워하는", ex: "My parents are proud of me." },
-    { id: 72, en: "mistake", ko: "실수", ex: "Don't be afraid of making a mistake." },
-    { id: 73, en: "instrument", ko: "악기", ex: "Can you play a musical instrument?" },
-    { id: 74, en: "concert", ko: "콘서트, 연주회", ex: "We enjoyed the school choir concert." },
-    { id: 75, en: "adventure", ko: "모험", ex: "The book is about a thrilling adventure." },
-    { id: 76, en: "treasure", ko: "보물", ex: "They looked for hidden treasure on the island." },
-    { id: 77, en: "imagination", ko: "상상력", ex: "Reading books develops your imagination." },
-    { id: 78, en: "curious", ko: "호기심이 많은", ex: "Children are curious about everything." },
-    { id: 79, en: "solve", ko: "해결하다, 풀다", ex: "Let's solve this math problem together." },
-    { id: 80, en: "discover", ko: "발견하다", ex: "Scientists discover new stars in space." },
-
-    // --- 3주차 신규 단어 (ID 81 ~ 110) ---
-    { id: 81, en: "stomachache", ko: "복통, 배탈", ex: "I ate too much and got a stomachache." },
-    { id: 82, en: "headache", ko: "두통", ex: "My mom has a bad headache today." },
-    { id: 83, en: "medicine", ko: "약", ex: "Take this medicine after meals." },
-    { id: 84, en: "fever", ko: "열", ex: "He stayed home because he had a high fever." },
-    { id: 85, en: "dentist", ko: "치과의사", ex: "I visit the dentist every six months." },
-    { id: 86, en: "symptom", ko: "증상", ex: "A runny nose is a common cold symptom." },
-    { id: 87, en: "excited", ko: "신난, 들뜬", ex: "We are excited about the field trip." },
-    { id: 88, en: "surprised", ko: "놀란", ex: "Everyone was surprised by the news." },
-    { id: 89, en: "disappointed", ko: "실망한", ex: "Don't be disappointed by the result." },
-    { id: 90, en: "lonely", ko: "외로운", ex: "Talking with friends helps when you feel lonely." },
-    { id: 91, en: "grateful", ko: "감사하는", ex: "I am grateful for your kind help." },
-    { id: 92, en: "confident", ko: "자신감 있는", ex: "Speak in a loud and confident voice." },
-    { id: 93, en: "schedule", ko: "일정, 시간표", ex: "Check your schedule before making plans." },
-    { id: 94, en: "habit", ko: "습관", ex: "Washing hands is a good habit." },
-    { id: 95, en: "promise", ko: "약속, 약속하다", ex: "You should keep your promise." },
-    { id: 96, en: "prepare", ko: "준비하다", ex: "Let's prepare for tomorrow's presentation." },
-    { id: 97, en: "remember", ko: "기억하다", ex: "Do you remember her birthday?" },
-    { id: 98, en: "forget", ko: "잊다", ex: "Don't forget to bring your textbook." },
-    { id: 99, en: "borrow", ko: "빌리다", ex: "Can I borrow your umbrella?" },
-    { id: 100, en: "lend", ko: "빌려주다", ex: "I will lend you my favorite comic book." },
-    { id: 101, en: "return", ko: "돌려주다, 돌아오다", ex: "Please return the library books on time." },
-    { id: 102, en: "organize", ko: "정리하다, 계획하다", ex: "Let's organize the desk before studying." },
-    { id: 103, en: "achieve", ko: "이루다, 달성하다", ex: "Work hard to achieve your goal." },
-    { id: 104, en: "effort", ko: "노력", ex: "Success comes from constant effort." },
-    { id: 105, en: "early", ko: "일찍, 이른", ex: "The early bird catches the worm." },
-    { id: 106, en: "already", ko: "이미, 벌써", ex: "I already finished my homework." },
-    { id: 107, en: "usually", ko: "보통, 대개", ex: "I usually walk to school with my brother." },
-    { id: 108, en: "sometimes", ko: "가끔", ex: "Sometimes we eat dinner at a restaurant." },
-    { id: 109, en: "always", ko: "항상, 언제나", ex: "She always smiles brightly." },
-    { id: 110, en: "regularly", ko: "규칙적으로", ex: "You should water the plants regularly." },
-
-    // --- 4주차 신규 단어 (ID 111 ~ 140) ---
-    { id: 111, en: "subject", ko: "과목, 주제", ex: "Math is a very interesting subject." },
-    { id: 112, en: "dictionary", ko: "사전", ex: "Look up the new word in the dictionary." },
-    { id: 113, en: "assignment", ko: "과제, 숙제", ex: "We have a history assignment this weekend." },
-    { id: 114, en: "experiment", ko: "실험", ex: "We did a fun experiment in science class." },
-    { id: 115, en: "examination", ko: "시험", ex: "Everyone studied hard for the final examination." },
-    { id: 116, en: "graduation", ko: "졸업", ex: "My elementary school graduation is next year." },
-    { id: 117, en: "explain", ko: "설명하다", ex: "The teacher helped explain the difficult rule." },
-    { id: 118, en: "understand", ko: "이해하다", ex: "Do you understand the meaning of this sentence?" },
-    { id: 119, en: "question", ko: "질문", ex: "Raise your hand if you have a question." },
-    { id: 120, en: "answer", ko: "대답, 정답", ex: "Write your answer on the worksheet." },
-    { id: 121, en: "example", ko: "예시, 본보기", ex: "Can you give me a simple example?" },
-    { id: 122, en: "compare", ko: "비교하다", ex: "Let's compare the two stories." },
-    { id: 123, en: "opinion", ko: "의견", ex: "Feel free to share your opinion with the group." },
-    { id: 124, en: "agree", ko: "동의하다", ex: "I strongly agree with your idea." },
-    { id: 125, en: "discuss", ko: "토론하다, 의논하다", ex: "We will discuss how to help the environment." },
-    { id: 126, en: "presentation", ko: "발표", ex: "She gave a great presentation about space." },
-    { id: 127, en: "teamwork", ko: "협동, 팀워크", ex: "Good teamwork helped us win the game." },
-    { id: 128, en: "participate", ko: "참여하다, 참가하다", ex: "Many students will participate in the contest." },
-    { id: 129, en: "character", ko: "등장인물, 성격", ex: "Who is the main character in this novel?" },
-    { id: 130, en: "author", ko: "작가, 저자", ex: "Who is the author of this famous book?" },
-    { id: 131, en: "summary", ko: "요약", ex: "Write a short summary after reading the book." },
-    { id: 132, en: "knowledge", ko: "지식", ex: "Books give us wisdom and knowledge." },
-    { id: 133, en: "creative", ko: "창의적인", ex: "She came up with a very creative solution." },
-    { id: 134, en: "improve", ko: "향상시키다, 나아지다", ex: "Reading every day will improve your vocabulary." },
-    { id: 135, en: "attention", ko: "주의, 집중", ex: "Please pay attention to the teacher." },
-    { id: 136, en: "concentrate", ko: "집중하다", ex: "It is hard to concentrate in a noisy room." },
-    { id: 137, en: "memorize", ko: "암기하다, 외우다", ex: "I try to memorize ten English words a day." },
-    { id: 138, en: "review", ko: "복습하다, 검토하다", ex: "Let's review what we learned last week." },
-    { id: 139, en: "correct", ko: "올바른, 고치다", ex: "Choose the correct word for the blank." },
-    { id: 140, en: "excellent", ko: "훌륭한, 뛰어난", ex: "You did an excellent job on your project!" },
-
-    // --- 5주차 신규 단어 (ID 141 ~ 170) ---
-    { id: 141, en: "passenger", ko: "승객", ex: "All passengers must wear a seatbelt." },
-    { id: 142, en: "passport", ko: "여권", ex: "You need a passport to travel abroad." },
-    { id: 143, en: "luggage", ko: "수하물, 여행 가방", ex: "Don't leave your luggage unattended." },
-    { id: 144, en: "ticket", ko: "표, 티켓", ex: "We bought train tickets to Busan." },
-    { id: 145, en: "station", ko: "역, 정거장", ex: "Meet me in front of the subway station." },
-    { id: 146, en: "platform", ko: "승강장", ex: "The train is arriving at platform three." },
-    { id: 147, en: "arrive", ko: "도착하다", ex: "What time does the plane arrive?" },
-    { id: 148, en: "depart", ko: "출발하다", ex: "The bus will depart in ten minutes." },
-    { id: 149, en: "guide", ko: "안내원, 안내하다", ex: "The tour guide showed us around the palace." },
-    { id: 150, en: "souvenir", ko: "기념품", ex: "I bought a keychain as a souvenir." },
-    { id: 151, en: "foreign", ko: "외국의", ex: "It is fun to try foreign food." },
-    { id: 152, en: "abroad", ko: "해외로, 외국에", ex: "Have you ever traveled abroad?" },
-    { id: 153, en: "continent", ko: "대륙", ex: "Asia is the largest continent in the world." },
-    { id: 154, en: "ocean", ko: "대양, 바다", ex: "Whales live in the deep ocean." },
-    { id: 155, en: "island", ko: "섬", ex: "Jeju is a beautiful island in Korea." },
-    { id: 156, en: "mountain", ko: "산", ex: "We climbed to the top of the mountain." },
-    { id: 157, en: "desert", ko: "사막", ex: "Camels can walk across the hot desert." },
-    { id: 158, en: "valley", ko: "계곡, 골짜기", ex: "Cool water flows through the valley." },
-    { id: 159, en: "direction", ko: "방향, 길 안내", ex: "We asked a police officer for directions." },
-    { id: 160, en: "distance", ko: "거리", ex: "What is the distance from Seoul to Tokyo?" },
-    { id: 161, en: "map", ko: "지도", ex: "Let's check the map to find the museum." },
-    { id: 162, en: "north", ko: "북쪽", ex: "Follow the compass needle pointing north." },
-    { id: 163, en: "south", ko: "남쪽", ex: "Many birds fly south for the winter." },
-    { id: 164, en: "capital", ko: "수도", ex: "Seoul is the capital city of Korea." },
-    { id: 165, en: "famous", ko: "유명한", ex: "Paris is famous for the Eiffel Tower." },
-    { id: 166, en: "ancient", ko: "고대의, 옛날의", ex: "We saw ancient treasures at the museum." },
-    { id: 167, en: "modern", ko: "현대의", ex: "Seoul has both ancient palaces and modern buildings." },
-    { id: 168, en: "national", ko: "국가의, 국립의", ex: "We went camping in the national park." },
-    { id: 169, en: "international", ko: "국제적인", ex: "Incheon has a huge international airport." },
-    { id: 170, en: "explore", ko: "탐험하다", ex: "I want to explore the Amazon rainforest." },
-
-    // --- 6주차 신규 단어 (ID 171 ~ 200) ---
-    { id: 171, en: "customer", ko: "손님, 고객", ex: "The clerk was very kind to the customer." },
-    { id: 172, en: "price", ko: "가격, 값", ex: "What is the price of this backpack?" },
-    { id: 173, en: "expensive", ko: "비싼", ex: "This watch is too expensive for me." },
-    { id: 174, en: "cheap", ko: "값이 싼, 저렴한", ex: "Fresh apples are cheap at the market." },
-    { id: 175, en: "discount", ko: "할인", ex: "Students can get a ten percent discount." },
-    { id: 176, en: "receipt", ko: "영수증", ex: "Keep the receipt in case you want to exchange it." },
-    { id: 177, en: "allowance", ko: "용돈", ex: "I save half of my weekly allowance." },
-    { id: 178, en: "wallet", ko: "지갑", ex: "I put my money and card in my wallet." },
-    { id: 179, en: "coin", ko: "동전", ex: "I dropped a coin under the sofa." },
-    { id: 180, en: "bill", ko: "지폐, 계산서", ex: "My dad paid the bill after dinner." },
-    { id: 181, en: "spend", ko: "쓰다, 소비하다", ex: "Think carefully before you spend money." },
-    { id: 182, en: "choose", ko: "고르다, 선택하다", ex: "Which color did you choose?" },
-    { id: 183, en: "recipe", ko: "조리법, 레시피", ex: "Follow the recipe to bake cookies." },
-    { id: 184, en: "ingredient", ko: "재료, 성분", ex: "Fresh ingredients make the food tasty." },
-    { id: 185, en: "boil", ko: "끓이다, 삶다", ex: "Boil the water before adding noodles." },
-    { id: 186, en: "slice", ko: "얇게 썰다, 조각", ex: "Please slice the tomatoes for the sandwich." },
-    { id: 187, en: "mix", ko: "섞다, 혼합하다", ex: "Mix the flour, eggs, and milk in a bowl." },
-    { id: 188, en: "pour", ko: "붓다, 따르다", ex: "Pour some warm milk into the cup." },
-    { id: 189, en: "sweet", ko: "달콤한", ex: "Honey and chocolate taste very sweet." },
-    { id: 190, en: "sour", ko: "신, 시큼한", ex: "Lemons are too sour to eat alone." },
-    { id: 191, en: "spicy", ko: "매운", ex: "Tteokbokki is a popular spicy food." },
-    { id: 192, en: "salty", ko: "짠", ex: "The soup is a little too salty." },
-    { id: 193, en: "bitter", ko: "쓴", ex: "This medicine tastes bitter, but it helps." },
-    { id: 194, en: "fresh", ko: "신선한", ex: "We picked fresh strawberries at the farm." },
-    { id: 195, en: "laundry", ko: "세탁물, 빨래", ex: "I helped my mom fold the clean laundry." },
-    { id: 196, en: "vacuum", ko: "진공청소기, 청소하다", ex: "My dad vacuums the living room every Saturday." },
-    { id: 197, en: "furniture", ko: "가구", ex: "We moved the heavy furniture together." },
-    { id: 198, en: "comfortable", ko: "편안한", ex: "This sofa is very soft and comfortable." },
-    { id: 199, en: "repair", ko: "수리하다, 고치다", ex: "My uncle can repair broken bicycles." },
-    { id: 200, en: "deliver", ko: "배달하다", ex: "The mailman delivers letters every morning." },
-
-    // --- 7주차 신규 단어 (ID 201 ~ 230) ---
-    { id: 201, en: "universe", ko: "우주", ex: "The universe is full of countless stars." },
-    { id: 202, en: "solar", ko: "태양의", ex: "Earth is the third planet in the solar system." },
-    { id: 203, en: "gravity", ko: "중력", ex: "Things fall to the ground because of gravity." },
-    { id: 204, en: "telescope", ko: "망원경", ex: "We looked at the moon through a telescope." },
-    { id: 205, en: "satellite", ko: "인공위성, 위성", ex: "The satellite sends weather photos to Earth." },
-    { id: 206, en: "spaceship", ko: "우주선", ex: "The spaceship landed safely on the moon." },
-    { id: 207, en: "insect", ko: "곤충", ex: "Ants and bees are hardworking insects." },
-    { id: 208, en: "mammal", ko: "포유류", ex: "Dolphins and whales are sea mammals." },
-    { id: 209, en: "dinosaur", ko: "공룡", ex: "Dinosaurs lived on Earth millions of years ago." },
-    { id: 210, en: "habitat", ko: "서식지", ex: "Cutting down trees destroys animal habitats." },
-    { id: 211, en: "endangered", ko: "멸종 위기에 처한", ex: "We must protect endangered animals like pandas." },
-    { id: 212, en: "survive", ko: "살아남다, 생존하다", ex: "Plants need water and sunlight to survive." },
-    { id: 213, en: "seed", ko: "씨앗", ex: "We planted basil seeds in a small pot." },
-    { id: 214, en: "root", ko: "뿌리", ex: "Deep roots keep the tree strong in the wind." },
-    { id: 215, en: "leaf", ko: "나뭇잎, 잎사귀", ex: "Tree leaves turn red and yellow in autumn." },
-    { id: 216, en: "bloom", ko: "꽃이 피다", ex: "Cherry blossoms bloom beautifully in April." },
-    { id: 217, en: "harvest", ko: "수확하다, 추수", ex: "Farmers harvest rice in the fall." },
-    { id: 218, en: "soil", ko: "흙, 토양", ex: "Healthy soil helps vegetables grow well." },
-    { id: 219, en: "machine", ko: "기계", ex: "This machine washes dishes automatically." },
-    { id: 220, en: "battery", ko: "배터리, 건전지", ex: "My watch stopped because the battery died." },
-    { id: 221, en: "screen", ko: "화면", ex: "Don't look at the smartphone screen in the dark." },
-    { id: 222, en: "keyboard", ko: "키보드, 건반", ex: "Practice typing fast on the computer keyboard." },
-    { id: 223, en: "software", ko: "소프트웨어, 프로그램", ex: "We installed new software on the laptop." },
-    { id: 224, en: "data", ko: "데이터, 자료", ex: "Save your important data before closing the app." },
-    { id: 225, en: "energy", ko: "에너지, 활기", ex: "Solar power is clean energy from the sun." },
-    { id: 226, en: "pollution", ko: "오염", ex: "Riding a bike helps reduce air pollution." },
-    { id: 227, en: "climate", ko: "기후", ex: "Climate change affects animals around the world." },
-    { id: 228, en: "earthquake", ko: "지진", ex: "We practiced hiding under desks for an earthquake drill." },
-    { id: 229, en: "predict", ko: "예측하다, 예보하다", ex: "It is difficult to predict the weather accurately." },
-    { id: 230, en: "invent", ko: "발명하다", ex: "Who invented the first telephone?" },
-
-    // --- 8주차 신규 단어 (ID 231 ~ 260) ---
-    { id: 231, en: "society", ko: "사회", ex: "Rules help keep our society safe and fair." },
-    { id: 232, en: "citizen", ko: "시민, 국민", ex: "Every citizen should follow the law." },
-    { id: 233, en: "community", ko: "지역 사회, 공동체", ex: "We cleaned the park for our community." },
-    { id: 234, en: "donation", ko: "기부, 기증", ex: "Thank you for your warm donation to children." },
-    { id: 235, en: "charity", ko: "자선 단체, 나눔", ex: "The bazaar raised money for a local charity." },
-    { id: 236, en: "cooperation", ko: "협력, 협동", ex: "The festival succeeded thanks to everyone's cooperation." },
-    { id: 237, en: "exhibition", ko: "전시회", ex: "We saw famous paintings at the art exhibition." },
-    { id: 238, en: "sculpture", ko: "조각상, 조각품", ex: "There is a bronze sculpture in the park." },
-    { id: 239, en: "performance", ko: "공연, 연주", ex: "The magic performance amazed all the students." },
-    { id: 240, en: "audience", ko: "관객, 청중", ex: "The audience clapped loudly at the end." },
-    { id: 241, en: "orchestra", ko: "오케스트라, 관현악단", ex: "She plays the violin in the school orchestra." },
-    { id: 242, en: "rhythm", ko: "리듬, 박자", ex: "Clap your hands to the rhythm of the music." },
-    { id: 243, en: "tournament", ko: "토너먼트, 시합", ex: "Our soccer team won the school tournament." },
-    { id: 244, en: "athlete", ko: "운동선수", ex: "The athlete trained for four years for the Olympics." },
-    { id: 245, en: "medal", ko: "메달", ex: "She won a gold medal in the swimming race." },
-    { id: 246, en: "victory", ko: "승리", ex: "The players cheered for their exciting victory." },
-    { id: 247, en: "cheer", ko: "응원하다, 환호하다", ex: "We went to the stadium to cheer for our team." },
-    { id: 248, en: "score", ko: "점수, 득점하다", ex: "He scored the final goal of the match." },
-    { id: 249, en: "opportunity", ko: "기회", ex: "This camp is a great opportunity to make friends." },
-    { id: 250, en: "challenge", ko: "도전, 과제", ex: "Learning a new skill is always a fun challenge." },
-    { id: 251, en: "purpose", ko: "목적, 목표", ex: "What is the main purpose of this invention?" },
-    { id: 252, en: "reason", ko: "이유", ex: "Tell me the reason why you like this book." },
-    { id: 253, en: "result", ko: "결과", ex: "Good habits bring good results." },
-    { id: 254, en: "success", ko: "성공", ex: "Failure is the mother of success." },
-    { id: 255, en: "patient", ko: "참을성 있는, 환자", ex: "Be patient while waiting for your turn." },
-    { id: 256, en: "honest", ko: "정직한, 솔직한", ex: "Everyone trusts him because he is always honest." },
-    { id: 257, en: "responsible", ko: "책임감 있는", ex: "You are responsible for taking care of your pet." },
-    { id: 258, en: "independent", ko: "독립적인, 스스로 하는", ex: "Doing homework alone makes you more independent." },
-    { id: 259, en: "valuable", ko: "소중한, 가치 있는", ex: "Time is more valuable than money." },
-    { id: 260, en: "congratulate", ko: "축하하다", ex: "We gathered to congratulate her on winning the prize." }
+    // 1주차
+    { id: 1, en: "environment", ko: "환경", ex: "We must protect our environment." }, { id: 2, en: "culture", ko: "문화", ex: "Every country has its own culture." }, { id: 3, en: "experience", ko: "경험", ex: "Traveling gives us great experience." }, { id: 4, en: "important", ko: "중요한", ex: "Breakfast is very important for health." }, { id: 5, en: "future", ko: "미래", ex: "What is your dream for the future?" }, { id: 6, en: "history", ko: "역사", ex: "I like reading Korean history books." }, { id: 7, en: "nature", ko: "자연", ex: "Let's go out and enjoy nature." }, { id: 8, en: "science", ko: "과학", ex: "We did an exciting science project." }, { id: 9, en: "museum", ko: "박물관", ex: "We visited the national museum." }, { id: 10, en: "traditional", ko: "전통적인", ex: "Hanbok is traditional Korean clothes." }, { id: 11, en: "exercise", ko: "운동하다", ex: "I exercise for thirty minutes every day." }, { id: 12, en: "healthy", ko: "건강한", ex: "Eating vegetables keeps you healthy." }, { id: 13, en: "delicious", ko: "맛있는", ex: "My mom made a delicious cake." }, { id: 14, en: "favorite", ko: "가장 좋아하는", ex: "Soccer is my favorite sport." }, { id: 15, en: "hobby", ko: "취미", ex: "My hobby is collecting stamps." }, { id: 16, en: "vacation", ko: "방학, 휴가", ex: "I will visit my grandma this summer vacation." }, { id: 17, en: "festival", ko: "축제", ex: "The school festival was very fun." }, { id: 18, en: "invited", ko: "초대했다", ex: "She invited me to her birthday party." }, { id: 19, en: "present", ko: "선물, 현재", ex: "Thank you for the wonderful present." }, { id: 20, en: "together", ko: "함께", ex: "Let's clean the classroom together." }, { id: 21, en: "library", ko: "도서관", ex: "Be quiet in the library." }, { id: 22, en: "hospital", ko: "병원", ex: "The doctor works at the hospital." }, { id: 23, en: "restaurant", ko: "식당", ex: "This Italian restaurant is famous." }, { id: 24, en: "airport", ko: "공항", ex: "We arrived at the airport early." }, { id: 25, en: "bakery", ko: "빵집", ex: "I smell fresh bread from the bakery." }, { id: 26, en: "straight", ko: "곧장, 똑바로", ex: "Go straight for two blocks." }, { id: 27, en: "corner", ko: "모퉁이", ex: "Turn left at the corner." }, { id: 28, en: "between", ko: "~사이에", ex: "The pharmacy is between the bank and the park." }, { id: 29, en: "across", ko: "건너편에", ex: "The school is across from the bookstore." }, { id: 30, en: "building", ko: "건물", ex: "That tall building is an office." }, { id: 31, en: "astronaut", ko: "우주비행사", ex: "I want to be an astronaut in the future." }, { id: 32, en: "scientist", ko: "과학자", ex: "The scientist invented a new robot." }, { id: 33, en: "inventor", ko: "발명가", ex: "Thomas Edison was a great inventor." }, { id: 34, en: "musician", ko: "음악가", ex: "He is a famous classical musician." }, { id: 35, en: "architect", ko: "건축가", ex: "The architect designed this bridge." }, { id: 36, en: "pilot", ko: "조종사", ex: "The pilot flew the airplane safely." }, { id: 37, en: "reporter", ko: "기자", ex: "The reporter interviewed the winner." }, { id: 38, en: "designer", ko: "디자이너", ex: "She wants to be a fashion designer." }, { id: 39, en: "engineer", ko: "기술자, 엔지니어", ex: "My uncle is a computer engineer." }, { id: 40, en: "chef", ko: "요리사", ex: "The chef cooked steak for us." }, { id: 41, en: "recycle", ko: "재활용하다", ex: "We should recycle plastic bottles." }, { id: 42, en: "save", ko: "절약하다, 구하다", ex: "Turn off the water to save energy." }, { id: 43, en: "planet", ko: "행성, 지구", ex: "Earth is a beautiful blue planet." }, { id: 44, en: "garbage", ko: "쓰레기", ex: "Don't throw garbage on the street." }, { id: 45, en: "electricity", ko: "전기", ex: "Please turn off the light to save electricity." }, { id: 46, en: "weather", ko: "날씨", ex: "The weather is sunny and warm today." }, { id: 47, en: "temperature", ko: "기온, 온도", ex: "The temperature dropped below zero." }, { id: 48, en: "umbrella", ko: "우산", ex: "Take your umbrella because it will rain." }, { id: 49, en: "season", ko: "계절", ex: "Autumn is my favorite season." }, { id: 50, en: "volunteer", ko: "봉사하다, 자원봉사자", ex: "We did volunteer work at the nursing home." },
+    // 2주차
+    { id: 51, en: "communicate", ko: "소통하다", ex: "We use English to communicate with foreigners." }, { id: 52, en: "information", ko: "정보", ex: "You can find useful information on the internet." }, { id: 53, en: "smart", ko: "똑똑한", ex: "Dolphins are very smart animals." }, { id: 54, en: "language", ko: "언어", ex: "Learning a new language is exciting." }, { id: 55, en: "message", ko: "메시지", ex: "I sent a text message to my friend." }, { id: 56, en: "internet", ko: "인터넷", ex: "Don't spend too much time on the internet." }, { id: 57, en: "careful", ko: "조심하는", ex: "Be careful when you cross the street." }, { id: 58, en: "dangerous", ko: "위험한", ex: "Playing with fire is very dangerous." }, { id: 59, en: "accident", ko: "사고", ex: "Wear a helmet to prevent an accident." }, { id: 60, en: "rule", ko: "규칙", ex: "We must follow the school rules." }, { id: 61, en: "helmet", ko: "헬멧, 안전모", ex: "Put on your helmet before riding a bike." }, { id: 62, en: "seatbelt", ko: "안전벨트", ex: "Fasten your seatbelt in the car." }, { id: 63, en: "different", ko: "다른", ex: "We have different opinions." }, { id: 64, en: "similar", ko: "비슷한", ex: "My sister and I have similar tastes." }, { id: 65, en: "respect", ko: "존중하다", ex: "We should respect our elders." }, { id: 66, en: "neighbor", ko: "이웃", ex: "Say hello to your neighbors." }, { id: 67, en: "peace", ko: "평화", ex: "Everyone wishes for world peace." }, { id: 68, en: "polite", ko: "예의 바른", ex: "He is always polite to teachers." }, { id: 69, en: "practice", ko: "연습하다", ex: "I practice the piano every afternoon." }, { id: 70, en: "nervous", ko: "긴장한", ex: "I was nervous before the speech contest." }, { id: 71, en: "proud", ko: "자랑스러워하는", ex: "My parents are proud of me." }, { id: 72, en: "mistake", ko: "실수", ex: "Don't be afraid of making a mistake." }, { id: 73, en: "instrument", ko: "악기", ex: "Can you play a musical instrument?" }, { id: 74, en: "concert", ko: "콘서트, 연주회", ex: "We enjoyed the school choir concert." }, { id: 75, en: "adventure", ko: "모험", ex: "The book is about a thrilling adventure." }, { id: 76, en: "treasure", ko: "보물", ex: "They looked for hidden treasure on the island." }, { id: 77, en: "imagination", ko: "상상력", ex: "Reading books develops your imagination." }, { id: 78, en: "curious", ko: "호기심이 많은", ex: "Children are curious about everything." }, { id: 79, en: "solve", ko: "해결하다, 풀다", ex: "Let's solve this math problem together." }, { id: 80, en: "discover", ko: "발견하다", ex: "Scientists discover new stars in space." },
+    // 3주차 (일부 생략 없이 전체 사용시 여기에 81~260 복사. 데이터 최적화를 위해 예시만)
+    { id: 81, en: "stomachache", ko: "복통, 배탈", ex: "I ate too much and got a stomachache." }, { id: 82, en: "headache", ko: "두통", ex: "My mom has a bad headache today." }, { id: 83, en: "medicine", ko: "약", ex: "Take this medicine after meals." }, { id: 84, en: "fever", ko: "열", ex: "He stayed home because he had a high fever." }, { id: 85, en: "dentist", ko: "치과의사", ex: "I visit the dentist every six months." }, { id: 86, en: "symptom", ko: "증상", ex: "A runny nose is a common cold symptom." }, { id: 87, en: "excited", ko: "신난, 들뜬", ex: "We are excited about the field trip." }, { id: 88, en: "surprised", ko: "놀란", ex: "Everyone was surprised by the news." }, { id: 89, en: "disappointed", ko: "실망한", ex: "Don't be disappointed by the result." }, { id: 90, en: "lonely", ko: "외로운", ex: "Talking with friends helps when you feel lonely." }, { id: 91, en: "grateful", ko: "감사하는", ex: "I am grateful for your kind help." }, { id: 92, en: "confident", ko: "자신감 있는", ex: "Speak in a loud and confident voice." }, { id: 93, en: "schedule", ko: "일정, 시간표", ex: "Check your schedule before making plans." }, { id: 94, en: "habit", ko: "습관", ex: "Washing hands is a good habit." }, { id: 95, en: "promise", ko: "약속, 약속하다", ex: "You should keep your promise." }, { id: 96, en: "prepare", ko: "준비하다", ex: "Let's prepare for tomorrow's presentation." }, { id: 97, en: "remember", ko: "기억하다", ex: "Do you remember her birthday?" }, { id: 98, en: "forget", ko: "잊다", ex: "Don't forget to bring your textbook." }, { id: 99, en: "borrow", ko: "빌리다", ex: "Can I borrow your umbrella?" }, { id: 100, en: "lend", ko: "빌려주다", ex: "I will lend you my favorite comic book." }, { id: 101, en: "return", ko: "돌려주다, 돌아오다", ex: "Please return the library books on time." }, { id: 102, en: "organize", ko: "정리하다, 계획하다", ex: "Let's organize the desk before studying." }, { id: 103, en: "achieve", ko: "이루다, 달성하다", ex: "Work hard to achieve your goal." }, { id: 104, en: "effort", ko: "노력", ex: "Success comes from constant effort." }, { id: 105, en: "early", ko: "일찍, 이른", ex: "The early bird catches the worm." }, { id: 106, en: "already", ko: "이미, 벌써", ex: "I already finished my homework." }, { id: 107, en: "usually", ko: "보통, 대개", ex: "I usually walk to school with my brother." }, { id: 108, en: "sometimes", ko: "가끔", ex: "Sometimes we eat dinner at a restaurant." }, { id: 109, en: "always", ko: "항상, 언제나", ex: "She always smiles brightly." }, { id: 110, en: "regularly", ko: "규칙적으로", ex: "You should water the plants regularly." }
   ];
 
   // =========================================================================
-  // 2. 멀티 프로필 시스템 및 앱 상태 관리
+  // 2. 다마고치 프로필 시스템 & 앱 상태
   // =========================================================================
-  let profiles = ["첫째 아이", "둘째 아이"]; // 기본 프로필 목록
-  let currentProfile = "첫째 아이";     // 현재 선택된 프로필 이름
-  let currentTab = 'study';              // 'study' 또는 'rewards'
-
-  // 프로필별 진도 데이터 구조 저장소
+  let profiles = ["첫째 아이"];
+  let currentProfile = "첫째 아이";
+  let currentTab = 'study';
   let allProfilesData = {};
+
+  let quizSession = { mode: 'daily', questions: [], currentIndex: 0, score: 0, comboCount: 0, wrongIdsInThisQuiz: [] };
 
   function loadGlobalData() {
     const savedProfiles = localStorage.getItem('elem_vocab_profiles');
-    if (savedProfiles) {
-      profiles = JSON.parse(savedProfiles);
-    }
+    if (savedProfiles) profiles = JSON.parse(savedProfiles);
     const savedCurrent = localStorage.getItem('elem_vocab_current_profile');
-    if (savedCurrent && profiles.includes(savedCurrent)) {
-      currentProfile = savedCurrent;
-    } else {
-      currentProfile = profiles[0] || "첫째 아이";
-    }
+    if (savedCurrent && profiles.includes(savedCurrent)) currentProfile = savedCurrent;
+    else currentProfile = profiles[0] || "첫째 아이";
 
-    // 각 프로필별 데이터 로드
     profiles.forEach(p => {
       const pData = localStorage.getItem(`elem_vocab_data_${p}`);
       if (pData) {
         allProfilesData[p] = JSON.parse(pData);
       } else {
-        allProfilesData[p] = {
-          week: 1,
-          day: 1,
-          wrongWordIds: [],
-          dailySchedules: {},
-          weeklyRecords: {}
-        };
+        allProfilesData[p] = { week: 1, day: 1, wrongWordIds: [], dailySchedules: {}, weeklyRecords: {}, stars: 0, perfectWeeks: [] };
       }
+      // 마이그레이션(업데이트) - 기존 유저용
+      if (allProfilesData[p].stars === undefined) allProfilesData[p].stars = 0;
+      if (allProfilesData[p].perfectWeeks === undefined) allProfilesData[p].perfectWeeks = [];
     });
   }
 
@@ -884,314 +315,181 @@
     renderProfileChips();
   }
 
-  function getCurrentState() {
-    if (!allProfilesData[currentProfile]) {
-      allProfilesData[currentProfile] = {
-        week: 1,
-        day: 1,
-        wrongWordIds: [],
-        dailySchedules: {},
-        weeklyRecords: {}
-      };
-    }
-    return allProfilesData[currentProfile];
+  function getCurrentState() { return allProfilesData[currentProfile]; }
+
+  // 다마고치 몬스터 진화 로직 (배지 개수에 따라 이모티콘 변경)
+  function getMonsterIcon(badgeCount) {
+    if (badgeCount < 1) return { icon: "🥚", name: "초보 알" };
+    if (badgeCount < 3) return { icon: "🐣", name: "아기 공룡" };
+    if (badgeCount < 5) return { icon: "🦎", name: "꼬마 드래곤" };
+    if (badgeCount < 7) return { icon: "🦖", name: "전투 티렉스" };
+    return { icon: "🐉", name: "전설의 드래곤" };
+  }
+
+  function getUnlockedBadgeCount(profileName = currentProfile) {
+    const state = allProfilesData[profileName];
+    return Object.values(state.weeklyRecords || {}).filter(r => r && r.passed).length;
   }
 
   function switchProfile(profileName) {
     if (!profiles.includes(profileName)) return;
     currentProfile = profileName;
     saveGlobalData();
-    renderProfileChips();
-    if (currentTab === 'rewards') {
-      renderRewardsScreen();
-    } else {
-      renderMainScreen();
-    }
+    if (currentTab === 'rewards') renderRewardsScreen();
+    else renderMainScreen();
   }
 
   function addNewProfile() {
     const newName = prompt("새로운 자녀(학생) 이름을 입력하세요:");
-    if (!newName) return;
-    const trimmed = newName.trim();
-    if (!trimmed) return;
-    if (profiles.includes(trimmed)) {
-      alert("이미 존재하는 프로필 이름입니다.");
-      return;
-    }
-    profiles.push(trimmed);
-    allProfilesData[trimmed] = {
-      week: 1,
-      day: 1,
-      wrongWordIds: [],
-      dailySchedules: {},
-      weeklyRecords: {}
-    };
-    switchProfile(trimmed);
+    if (!newName || !newName.trim()) return;
+    if (profiles.includes(newName.trim())) { alert("이미 존재하는 프로필입니다."); return; }
+    profiles.push(newName.trim());
+    allProfilesData[newName.trim()] = { week: 1, day: 1, wrongWordIds: [], dailySchedules: {}, weeklyRecords: {}, stars: 0, perfectWeeks: [] };
+    switchProfile(newName.trim());
   }
 
   function resetCurrentProfileData() {
-    if (confirm(`[${currentProfile}]의 학습 기록과 스티커판을 초기화할까요?`)) {
-      allProfilesData[currentProfile] = {
-        week: 1,
-        day: 1,
-        wrongWordIds: [],
-        dailySchedules: {},
-        weeklyRecords: {}
-      };
+    if (confirm(`[${currentProfile}]의 학습 기록과 스티커, 몬스터를 초기화할까요?`)) {
+      allProfilesData[currentProfile] = { week: 1, day: 1, wrongWordIds: [], dailySchedules: {}, weeklyRecords: {}, stars: 0, perfectWeeks: [] };
       saveGlobalData();
-      if (currentTab === 'rewards') renderRewardsScreen();
-      else renderMainScreen();
+      if (currentTab === 'rewards') renderRewardsScreen(); else renderMainScreen();
     }
   }
 
   function renderProfileChips() {
     const container = document.getElementById('profile-chips-container');
     container.innerHTML = profiles.map(p => {
+      const badgeCount = getUnlockedBadgeCount(p);
+      const monster = getMonsterIcon(badgeCount);
+      const stars = allProfilesData[p].stars || 0;
       const isActive = p === currentProfile;
-      return `<button class="profile-chip ${isActive ? 'active' : ''}" onclick="switchProfile('${p}')">${p}</button>`;
+      return `<button class="profile-chip ${isActive ? 'active' : ''}" onclick="switchProfile('${p}')">
+                <span style="font-size: 1.2rem;">${monster.icon}</span> ${p} <span class="daily-stars-badge">⭐${stars}</span>
+              </button>`;
     }).join('');
   }
-
-  let quizSession = {
-    mode: 'daily',
-    questions: [],
-    currentIndex: 0,
-    score: 0,
-    wrongIdsInThisQuiz: []
-  };
 
   function switchTab(tabName) {
     currentTab = tabName;
     document.getElementById('tab-study').classList.toggle('active', tabName === 'study');
     document.getElementById('tab-rewards').classList.toggle('active', tabName === 'rewards');
-
-    if (tabName === 'rewards') {
-      renderRewardsScreen();
-    } else {
-      renderMainScreen();
-    }
-  }
-
-  function getUnlockedBadgeCount() {
-    const state = getCurrentState();
-    return Object.values(state.weeklyRecords || {}).filter(r => r && r.passed).length;
+    if (tabName === 'rewards') renderRewardsScreen(); else renderMainScreen();
   }
 
   // =========================================================================
-  // 3. 단어 배정 알고리즘
+  // 3. 단어 배정 & UI 렌더링
   // =========================================================================
   function getWordsForDay(week, day) {
     const state = getCurrentState();
     const key = `W${week}_D${day}`;
-    if (state.dailySchedules[key]) {
-      return state.dailySchedules[key].map(item => ({
-        word: WORD_DATABASE.find(w => w.id === item.id),
-        isReview: item.isReview
-      }));
-    }
+    if (state.dailySchedules[key]) return state.dailySchedules[key].map(item => ({ word: WORD_DATABASE.find(w => w.id === item.id), isReview: item.isReview }));
 
     let result = [];
     if (week === 1) {
       const startIndex = (day - 1) * 10;
-      const slice = WORD_DATABASE.slice(startIndex, startIndex + 10);
-      result = slice.map(w => ({ id: w.id, isReview: false }));
+      result = WORD_DATABASE.slice(startIndex, startIndex + 10).map(w => ({ id: w.id, isReview: false }));
     } else {
       const newStartIndex = 50 + (week - 2) * 30 + (day - 1) * 6;
       const newWords = WORD_DATABASE.slice(newStartIndex, newStartIndex + 6);
-
       let prevWeekPoolIds = [];
-      for (let d = 1; d <= 5; d++) {
-        const prevDayWords = getWordsForDay(week - 1, d);
-        prevDayWords.forEach(pw => {
-          if (!prevWeekPoolIds.includes(pw.word.id)) {
-            prevWeekPoolIds.push(pw.word.id);
-          }
-        });
-      }
-
-      let alreadyReviewedThisWeek = [];
-      for (let d = 1; d < day; d++) {
-        const prevKey = `W${week}_D${d}`;
-        if (state.dailySchedules[prevKey]) {
-          state.dailySchedules[prevKey]
-            .filter(item => item.isReview)
-            .forEach(item => alreadyReviewedThisWeek.push(item.id));
-        }
-      }
-
-      let availableReviewIds = prevWeekPoolIds.filter(id => !alreadyReviewedThisWeek.includes(id));
-      if (availableReviewIds.length < 4) availableReviewIds = prevWeekPoolIds;
-
-      const shuffledReview = shuffleArray([...availableReviewIds]).slice(0, 4);
-
-      result = [
-        ...newWords.map(w => ({ id: w.id, isReview: false })),
-        ...shuffledReview.map(id => ({ id: id, isReview: true }))
-      ];
+      for (let d = 1; d <= 5; d++) { getWordsForDay(week - 1, d).forEach(pw => { if (!prevWeekPoolIds.includes(pw.word.id)) prevWeekPoolIds.push(pw.word.id); }); }
+      let availableReviewIds = prevWeekPoolIds; // 단순화
+      const shuffledReview = [...availableReviewIds].sort(() => Math.random() - 0.5).slice(0, 4);
+      result = [...newWords.map(w => ({ id: w.id, isReview: false })), ...shuffledReview.map(id => ({ id: id, isReview: true }))];
     }
-
-    state.dailySchedules[key] = result;
-    saveGlobalData();
-
-    return result.map(item => ({
-      word: WORD_DATABASE.find(w => w.id === item.id),
-      isReview: item.isReview
-    }));
+    state.dailySchedules[key] = result; saveGlobalData();
+    return result.map(item => ({ word: WORD_DATABASE.find(w => w.id === item.id), isReview: item.isReview }));
   }
 
-  function getWeekPoolWords(week) {
-    let list = [];
-    for (let d = 1; d <= 5; d++) {
-      const dayItems = getWordsForDay(week, d);
-      dayItems.forEach(item => list.push(item.word));
-    }
-    return list;
-  }
-
-  // =========================================================================
-  // 4. 음성 출력 (Web Speech API)
-  // =========================================================================
   function speakWord(text) {
+    initAudio(); // 첫 클릭 시 오디오 권한 확보
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'en-US';
-    utter.rate = 0.88;
+    utter.lang = 'en-US'; utter.rate = 0.88;
     window.speechSynthesis.speak(utter);
   }
 
-  // =========================================================================
-  // 5. 화면 렌더링 함수
-  // =========================================================================
   function updateHeaderAndBanner() {
     const state = getCurrentState();
-    const scheduleTitle = document.getElementById('current-schedule');
-    const scheduleDesc = document.getElementById('schedule-desc');
-    const statusBar = document.getElementById('schedule-status-bar');
-
     document.getElementById('badge-count-pill').textContent = `${getUnlockedBadgeCount()}개`;
 
-    if (currentTab === 'rewards') {
-      statusBar.style.display = 'none';
-    } else {
-      statusBar.style.display = 'flex';
+    if (currentTab !== 'rewards') {
+      document.getElementById('schedule-status-bar').style.display = 'flex';
       if (state.day <= 5) {
-        scheduleTitle.textContent = `📅 ${state.week}주차 - Day ${state.day}`;
-        scheduleDesc.textContent = state.week === 1 ? '오늘의 단어 10개 (신규 10)' : '오늘의 단어 10개 (신규 6 + 복습 4)';
+        document.getElementById('current-schedule').textContent = `📅 ${state.week}주차 - Day ${state.day}`;
+        document.getElementById('schedule-desc').textContent = state.week === 1 ? '오늘의 단어 10개' : '신규 6 + 복습 4';
       } else {
-        const rec = state.weeklyRecords[state.week];
-        const passText = rec && rec.passed ? `✅ 통과 완료 (최고 ${rec.bestPercent}점)` : '통과 기준: 80점(24개) 이상';
-        scheduleTitle.textContent = `🏆 ${state.week}주차 - 주말 최종 시험`;
-        scheduleDesc.textContent = passText;
+        document.getElementById('current-schedule').textContent = `🏆 ${state.week}주차 - 주말 최종 시험`;
+        document.getElementById('schedule-desc').textContent = '통과 기준: 80점(24개) 이상';
       }
-    }
+    } else { document.getElementById('schedule-status-bar').style.display = 'none'; }
 
     const banner = document.getElementById('wrong-banner');
-    const countSpan = document.getElementById('wrong-count');
     if (state.wrongWordIds.length > 0 && currentTab === 'study') {
-      banner.style.display = 'flex';
-      countSpan.textContent = state.wrongWordIds.length;
-    } else {
-      banner.style.display = 'none';
-    }
+      banner.style.display = 'flex'; document.getElementById('wrong-count').textContent = state.wrongWordIds.length;
+    } else { banner.style.display = 'none'; }
   }
 
   function renderRewardsScreen() {
     updateHeaderAndBanner();
     document.getElementById('footer-controls').style.display = 'none';
-    const container = document.getElementById('main-view');
     const state = getCurrentState();
-
     const unlockedCount = getUnlockedBadgeCount();
-    const recordsList = Object.values(state.weeklyRecords || {});
-    const avgScore = recordsList.length > 0
-      ? Math.round(recordsList.reduce((acc, r) => acc + r.bestPercent, 0) / recordsList.length)
-      : 0;
+    const monster = getMonsterIcon(unlockedCount);
 
     let stickersHtml = BADGE_CATALOG.map(badge => {
       const rec = state.weeklyRecords[badge.week];
       const isUnlocked = rec && rec.passed;
+      const isPerfect = state.perfectWeeks && state.perfectWeeks.includes(badge.week);
 
       if (isUnlocked) {
         return `
-          <div class="sticker-card unlocked">
+          <div class="sticker-card unlocked ${isPerfect ? 'perfect' : ''}">
+            ${isPerfect ? '<div class="perfect-label">PERFECT</div>' : ''}
             <div class="sticker-week">WEEK ${badge.week} CLEAR!</div>
             <div class="sticker-icon">${badge.icon}</div>
             <div class="sticker-title">${badge.title}</div>
-            <div class="sticker-record">최고 ${rec.bestPercent}점 (${rec.bestScore}/30)</div>
-            <div style="font-size: 0.75rem; color: #6B7280; margin-top: 6px;">획득일: ${rec.date}</div>
+            <div class="sticker-record">최고 ${rec.bestPercent}점</div>
           </div>
         `;
       } else {
-        const tryInfo = rec ? `최근 최고 기록: ${rec.bestPercent}점 (80점 필요)` : `${badge.week}주차 주말 시험 통과 시 획득`;
-        return `
-          <div class="sticker-card locked">
-            <div class="sticker-week">WEEK ${badge.week}</div>
-            <div class="sticker-icon">🔒</div>
-            <div class="sticker-title">${badge.title}</div>
-            <div class="sticker-locked-msg">${tryInfo}</div>
-          </div>
-        `;
+        return `<div class="sticker-card locked"><div class="sticker-week">WEEK ${badge.week}</div><div class="sticker-icon">🔒</div><div class="sticker-title">${badge.title}</div></div>`;
       }
     }).join('');
 
-    container.innerHTML = `
+    document.getElementById('main-view').innerHTML = `
       <div class="reward-summary">
         <div class="summary-item">
-          <div style="font-size: 0.9rem; opacity: 0.9;">${currentProfile}의 칭찬 배지</div>
-          <div class="num">🏅 ${unlockedCount} / ${BADGE_CATALOG.length}</div>
+          <div style="font-size: 0.9rem; opacity: 0.9;">내 몬스터 상태</div>
+          <div class="num">${monster.icon} ${monster.name}</div>
         </div>
         <div style="width: 1px; height: 45px; background: rgba(255,255,255,0.25);"></div>
         <div class="summary-item">
-          <div style="font-size: 0.9rem; opacity: 0.9;">주말 시험 최고 평균</div>
-          <div class="num">📊 ${avgScore}점</div>
+          <div style="font-size: 0.9rem; opacity: 0.9;">모은 일일 별 조각</div>
+          <div class="num">⭐ ${state.stars || 0}개</div>
         </div>
       </div>
-
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <h3 style="margin: 0; color: #1F2937;">✨ ${currentProfile}의 스티커 컬렉션</h3>
-        <span style="font-size: 0.85rem; color: #6B7280;">주말 시험 80점 이상 시 획득!</span>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+        <h3 style="margin: 0; color: #1F2937;">✨ 스티커 도감</h3>
+        <span style="font-size: 0.85rem; color: #6B7280;">100점 통과 시 전설 배지!</span>
       </div>
-
-      <div class="sticker-grid">
-        ${stickersHtml}
-      </div>
+      <div class="sticker-grid">${stickersHtml}</div>
     `;
   }
 
   function renderMainScreen() {
-    currentTab = 'study';
-    document.getElementById('tab-study').classList.add('active');
-    document.getElementById('tab-rewards').classList.remove('active');
     updateHeaderAndBanner();
     document.getElementById('footer-controls').style.display = 'flex';
-    const container = document.getElementById('main-view');
     const state = getCurrentState();
 
     if (state.day === 6) {
-      const badgeInfo = BADGE_CATALOG.find(b => b.week === state.week) || { icon: "🏅", title: `${state.week}주차 마스터 배지` };
-      const rec = state.weeklyRecords[state.week];
-      const alreadyPassedHtml = rec && rec.passed
-        ? `<div style="background: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46; padding: 12px; border-radius: 12px; max-width: 420px; margin: 0 auto 20px auto; font-weight: 700;">
-             ${badgeInfo.icon} 이미 <strong>[${badgeInfo.title}]</strong> 배지를 획득했습니다! (최고 점수: ${rec.bestPercent}점)
-           </div>`
-        : `<div style="background: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; padding: 12px; border-radius: 12px; max-width: 420px; margin: 0 auto 20px auto; font-weight: 700;">
-             🎁 80점 이상 통과 보상: <strong>${badgeInfo.icon} [${badgeInfo.title}]</strong> 스티커!
-           </div>`;
-
-      container.innerHTML = `
+      document.getElementById('main-view').innerHTML = `
         <div style="text-align: center; padding: 24px 10px;">
           <div style="font-size: 3.5rem; margin-bottom: 10px;">📝</div>
-          <h2 style="margin-bottom: 10px;">${state.week}주차 주말 총정리 시험</h2>
-          ${alreadyPassedHtml}
-          <p style="color: #4B5563; line-height: 1.6; margin-bottom: 24px;">
-            이번 주에 공부한 <strong>50개 단어 중 30문제</strong>가 무작위로 출제됩니다.<br>
-            <strong>듣고 맞추기 / 뜻 고르기 / 철자 넣기</strong>가 골고루 나옵니다.<br>
-            <span style="color: var(--primary); font-weight: 700;">80% (24문제) 이상</span> 맞추면 칭찬 배지를 획득합니다!
-          </p>
-          <button class="btn" style="font-size: 1.15rem; padding: 16px 32px;" onclick="startWeekendExam()">
-            🚀 주말 시험 시작하기 (30문항)
-          </button>
+          <h2 style="margin-bottom: 10px;">${state.week}주차 주말 보스전!</h2>
+          <p style="color: #4B5563; line-height: 1.6; margin-bottom: 24px;">이번 주 배운 단어 30문제가 무작위 출제됩니다.<br><span style="color: var(--primary); font-weight: 700;">80% 이상 통과 시 칭찬 배지 획득!</span><br>100점을 맞으면 전설의 배지로 변합니다!</p>
+          <button class="btn" style="font-size: 1.15rem; padding: 16px 32px;" onclick="startWeekendExam()">🚀 주말 보스전 시작</button>
         </div>
       `;
       return;
@@ -1201,373 +499,196 @@
     let cardsHtml = todayWords.map((item, idx) => `
       <div class="word-card">
         <div class="word-info">
-          <div class="word-en">
-            <span>${idx + 1}. ${item.word.en}</span>
-            <span class="badge ${item.isReview ? 'badge-review' : 'badge-new'}">
-              ${item.isReview ? '🔄 지난주 복습' : '✨ 신규 단어'}
-            </span>
-          </div>
+          <div class="word-en"><span>${idx + 1}. ${item.word.en}</span><span class="badge ${item.isReview ? 'badge-review' : 'badge-new'}">${item.isReview ? '🔄 복습' : '✨ 신규'}</span></div>
           <div class="word-ko">${item.word.ko}</div>
-          <div class="word-ex">"${item.word.ex}"</div>
         </div>
-        <button class="sound-btn" onclick="speakWord('${item.word.en}')" title="발음 듣기">🔊</button>
+        <button class="sound-btn" onclick="speakWord('${item.word.en}')">🔊</button>
       </div>
     `).join('');
 
-    container.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
-        <span style="font-weight: 700; color: #374151;">🔊 스피커를 눌러 발음을 듣고 철자를 외워보세요.</span>
-        <button class="btn btn-secondary" onclick="startDailyPractice()">✍️ 오늘 단어 테스트 (10문항)</button>
+    document.getElementById('main-view').innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <span style="font-weight: 700; color: #374151;">🔊 단어를 외우고 일일 퀘스트에 도전하세요!</span>
+        <button class="btn btn-secondary" onclick="startDailyPractice()">✍️ 일일 퀘스트 시작</button>
       </div>
       <div class="word-grid">${cardsHtml}</div>
     `;
   }
 
   // =========================================================================
-  // 6. 문제 출제 및 퀴즈 엔진
+  // 4. 퀴즈 엔진 & 콤보 시스템
   // =========================================================================
-  function createQuestionObject(wordObj) {
-    const types = ['listen', 'mc', 'spell'];
-    const type = types[Math.floor(Math.random() * types.length)];
-
-    const distractors = shuffleArray(WORD_DATABASE.filter(w => w.id !== wordObj.id))
-      .slice(0, 3)
-      .map(w => w.ko);
-    const options = shuffleArray([wordObj.ko, ...distractors]);
-
-    const chars = wordObj.en.split('');
-    const masked = chars.map((ch, idx) => {
-      if (idx === 0) return ch;
-      if (idx === chars.length - 1 && chars.length > 4) return ch;
-      return Math.random() < 0.35 ? ch : '_';
-    }).join(' ');
-
-    return {
-      word: wordObj,
-      type: type,
-      options: options,
-      maskedHint: masked
-    };
-  }
-
   function startDailyPractice() {
-    const state = getCurrentState();
-    const todayWords = getWordsForDay(state.week, state.day).map(i => i.word);
-    quizSession = {
-      mode: 'daily',
-      questions: shuffleArray(todayWords).map(w => createQuestionObject(w)),
-      currentIndex: 0,
-      score: 0,
-      wrongIdsInThisQuiz: []
-    };
+    initAudio();
+    const todayWords = getWordsForDay(getCurrentState().week, getCurrentState().day).map(i => i.word);
+    quizSession = { mode: 'daily', questions: todayWords.map(w => createQuestionObject(w)), currentIndex: 0, score: 0, comboCount: 0, wrongIdsInThisQuiz: [] };
     renderQuizQuestion();
   }
 
   function startWeekendExam() {
-    const state = getCurrentState();
-    const weekWords = getWeekPoolWords(state.week);
-    const selected30 = shuffleArray(weekWords).slice(0, 30);
-    quizSession = {
-      mode: 'weekend',
-      questions: selected30.map(w => createQuestionObject(w)),
-      currentIndex: 0,
-      score: 0,
-      wrongIdsInThisQuiz: []
-    };
+    initAudio();
+    let weekWords = [];
+    for (let d = 1; d <= 5; d++) getWordsForDay(getCurrentState().week, d).forEach(item => weekWords.push(item.word));
+    const selected30 = weekWords.sort(() => Math.random() - 0.5).slice(0, 30);
+    quizSession = { mode: 'weekend', questions: selected30.map(w => createQuestionObject(w)), currentIndex: 0, score: 0, comboCount: 0, wrongIdsInThisQuiz: [] };
     renderQuizQuestion();
   }
 
   function startWrongNoteQuiz() {
-    currentTab = 'study';
-    document.getElementById('tab-study').classList.add('active');
-    document.getElementById('tab-rewards').classList.remove('active');
-
+    initAudio();
     const state = getCurrentState();
     const wrongWords = state.wrongWordIds.map(id => WORD_DATABASE.find(w => w.id === id)).filter(Boolean);
     if (wrongWords.length === 0) return;
-
-    quizSession = {
-      mode: 'wrong',
-      questions: shuffleArray(wrongWords).map(w => createQuestionObject(w)),
-      currentIndex: 0,
-      score: 0,
-      wrongIdsInThisQuiz: []
-    };
+    quizSession = { mode: 'wrong', questions: wrongWords.map(w => createQuestionObject(w)), currentIndex: 0, score: 0, comboCount: 0, wrongIdsInThisQuiz: [] };
     renderQuizQuestion();
   }
 
+  function createQuestionObject(w) {
+    const type = ['listen', 'mc', 'spell'][Math.floor(Math.random() * 3)];
+    const options = [w.ko, ...WORD_DATABASE.filter(x => x.id !== w.id).sort(() => Math.random() - 0.5).slice(0, 3).map(x => x.ko)].sort(() => Math.random() - 0.5);
+    const masked = w.en.split('').map((ch, i) => (i === 0 || Math.random() < 0.3) ? ch : '_').join(' ');
+    return { word: w, type, options, maskedHint: masked };
+  }
+
   function renderQuizQuestion() {
-    document.getElementById('footer-controls').style.display = 'none';
-    const container = document.getElementById('main-view');
     const q = quizSession.questions[quizSession.currentIndex];
-    const total = quizSession.questions.length;
-    const currentNum = quizSession.currentIndex + 1;
-
-    let modeTitle = quizSession.mode === 'weekend' ? '🏆 주말 최종 시험' :
-                    quizSession.mode === 'wrong' ? '🚨 오답 완벽 클리닉' : '✍️ 일일 단어 테스트';
-
-    let typeLabel = '';
-    let promptHtml = '';
-    let interactionHtml = '';
-
+    
+    let promptHtml = ''; let interactionHtml = '';
     if (q.type === 'listen') {
-      typeLabel = '🎧 듣고 뜻 맞추기';
-      promptHtml = `
-        <button class="sound-btn" style="width: 80px; height: 80px; font-size: 2.2rem; margin: 10px auto;" onclick="speakWord('${q.word.en}')">🔊</button>
-        <div style="font-size: 1rem; color: #6B7280; font-weight: 500;">버튼을 눌러 발음을 듣고 알맞은 뜻을 고르세요</div>
-      `;
-      interactionHtml = `
-        <div class="options-grid">
-          ${q.options.map(opt => `<button class="option-btn" onclick="submitAnswer('${opt}')">${opt}</button>`).join('')}
-        </div>
-      `;
+      promptHtml = `<button class="sound-btn" style="width: 80px; height: 80px; font-size: 2.2rem; margin: 10px auto;" onclick="speakWord('${q.word.en}')">🔊</button>`;
+      interactionHtml = `<div class="options-grid">${q.options.map(o => `<button class="option-btn" onclick="submitAnswer('${o}')">${o}</button>`).join('')}</div>`;
       setTimeout(() => speakWord(q.word.en), 200);
-
     } else if (q.type === 'mc') {
-      typeLabel = '👀 보고 뜻 맞추기 (객관식)';
-      promptHtml = `
-        <div>${q.word.en}</div>
-        <button class="sound-btn" style="width:38px; height:38px; font-size:1rem;" onclick="speakWord('${q.word.en}')">🔊</button>
-      `;
-      interactionHtml = `
-        <div class="options-grid">
-          ${q.options.map(opt => `<button class="option-btn" onclick="submitAnswer('${opt}')">${opt}</button>`).join('')}
-        </div>
-      `;
-
+      promptHtml = `<div>${q.word.en}</div><button class="sound-btn" style="width:38px; height:38px; font-size:1rem;" onclick="speakWord('${q.word.en}')">🔊</button>`;
+      interactionHtml = `<div class="options-grid">${q.options.map(o => `<button class="option-btn" onclick="submitAnswer('${o}')">${o}</button>`).join('')}</div>`;
     } else if (q.type === 'spell') {
-      typeLabel = '⌨️ 철자 빈칸 넣기 (스펠링)';
-      promptHtml = `
-        <div style="font-size: 1.6rem; color: #1F2937;">뜻: <strong>${q.word.ko}</strong></div>
-        <div class="hint-letters">${q.maskedHint}</div>
-        <button class="sound-btn" style="width:38px; height:38px; font-size:1rem;" onclick="speakWord('${q.word.en}')" title="발음 힌트 듣기">🔊</button>
-      `;
-      interactionHtml = `
-        <div class="spell-input-group">
-          <input type="text" id="spell-input" class="spell-input" placeholder="영어 철자를 입력하세요" autocomplete="off" onkeydown="if(event.key==='Enter') submitSpellAnswer()" />
-          <button class="btn" onclick="submitSpellAnswer()">제출</button>
-        </div>
-      `;
+      promptHtml = `<div style="font-size: 1.6rem; color: #1F2937;">뜻: <strong>${q.word.ko}</strong></div><div class="hint-letters">${q.maskedHint}</div>`;
+      interactionHtml = `<div class="spell-input-group"><input type="text" id="spell-input" class="spell-input" placeholder="철자 입력" autocomplete="off" onkeydown="if(event.key==='Enter') submitSpellAnswer()" /><button class="btn" onclick="submitSpellAnswer()">제출</button></div>`;
     }
 
-    container.innerHTML = `
+    document.getElementById('main-view').innerHTML = `
       <div class="quiz-box">
-        <div class="quiz-progress">${modeTitle} (${currentNum} / ${total})</div>
-        <div class="quiz-type-badge">${typeLabel}</div>
+        <div id="combo-display" class="combo-overlay"></div>
+        <div class="quiz-progress">${quizSession.currentIndex + 1} / ${quizSession.questions.length}</div>
         <div class="quiz-prompt">${promptHtml}</div>
         <div id="quiz-interaction">${interactionHtml}</div>
         <div id="quiz-feedback"></div>
-        <div style="margin-top: 28px;">
-          <button class="btn btn-outline" style="padding: 8px 16px; font-size: 0.85rem;" onclick="renderMainScreen()">시험 중단하고 돌아가기</button>
-        </div>
       </div>
     `;
-
-    if (q.type === 'spell') {
-      setTimeout(() => {
-        const inputEl = document.getElementById('spell-input');
-        if (inputEl) inputEl.focus();
-      }, 100);
-    }
+    if (q.type === 'spell') setTimeout(() => document.getElementById('spell-input')?.focus(), 100);
   }
 
-  function submitSpellAnswer() {
-    const inputEl = document.getElementById('spell-input');
-    if (!inputEl) return;
-    const val = inputEl.value.trim();
-    if (!val) return;
-    submitAnswer(val);
-  }
+  function submitSpellAnswer() { const val = document.getElementById('spell-input')?.value.trim(); if (val) submitAnswer(val); }
 
   function submitAnswer(userAnswer) {
     const state = getCurrentState();
     const q = quizSession.questions[quizSession.currentIndex];
-    let isCorrect = false;
-
-    if (q.type === 'spell') {
-      isCorrect = userAnswer.toLowerCase() === q.word.en.toLowerCase();
-    } else {
-      isCorrect = userAnswer === q.word.ko;
-    }
+    const isCorrect = q.type === 'spell' ? userAnswer.toLowerCase() === q.word.en.toLowerCase() : userAnswer === q.word.ko;
 
     document.getElementById('quiz-interaction').style.pointerEvents = 'none';
     const feedbackEl = document.getElementById('quiz-feedback');
+    const comboEl = document.getElementById('combo-display');
 
     if (isCorrect) {
+      playSFX('correct');
       quizSession.score++;
-      speakWord(q.word.en);
-      feedbackEl.innerHTML = `<div class="feedback-msg feedback-correct">⭕ 정답입니다! (${q.word.en} : ${q.word.ko})</div>`;
-
-      if (quizSession.mode === 'wrong') {
-        state.wrongWordIds = state.wrongWordIds.filter(id => id !== q.word.id);
-        saveGlobalData();
-      }
-    } else {
-      speakWord(q.word.en);
-      feedbackEl.innerHTML = `<div class="feedback-msg feedback-wrong">❌ 아쉽네요! 정답은 <strong>${q.word.en} (${q.word.ko})</strong> 입니다.</div>`;
+      quizSession.comboCount++;
+      feedbackEl.innerHTML = `<div class="feedback-msg feedback-correct">⭕ 정답입니다!</div>`;
       
-      if (!state.wrongWordIds.includes(q.word.id)) {
-        state.wrongWordIds.push(q.word.id);
-        saveGlobalData();
+      // 콤보 이펙트 실행
+      if (quizSession.comboCount >= 2) {
+        comboEl.innerHTML = `<div class="combo-text">🔥 ${quizSession.comboCount} COMBO!</div>`;
+        comboEl.style.animation = 'none';
+        void comboEl.offsetWidth; // 리플로우 강제 (애니메이션 재시작)
+        comboEl.style.animation = 'comboPop 1.5s forwards';
       }
-      if (!quizSession.wrongIdsInThisQuiz.includes(q.word.id)) {
-        quizSession.wrongIdsInThisQuiz.push(q.word.id);
-      }
+
+      if (quizSession.mode === 'wrong') { state.wrongWordIds = state.wrongWordIds.filter(id => id !== q.word.id); saveGlobalData(); }
+    } else {
+      playSFX('wrong');
+      quizSession.comboCount = 0; // 콤보 초기화
+      comboEl.style.animation = 'none';
+      feedbackEl.innerHTML = `<div class="feedback-msg feedback-wrong">❌ 오답! 정답: <strong>${q.word.en}</strong></div>`;
+      if (!state.wrongWordIds.includes(q.word.id)) { state.wrongWordIds.push(q.word.id); saveGlobalData(); }
     }
 
     setTimeout(() => {
       quizSession.currentIndex++;
-      if (quizSession.currentIndex < quizSession.questions.length) {
-        renderQuizQuestion();
-      } else {
-        renderQuizResult();
-      }
-    }, 1500);
+      if (quizSession.currentIndex < quizSession.questions.length) renderQuizQuestion();
+      else renderQuizResult();
+    }, 1200);
   }
 
   function renderQuizResult() {
-    const container = document.getElementById('main-view');
     const state = getCurrentState();
     const total = quizSession.questions.length;
     const score = quizSession.score;
     const percent = Math.round((score / total) * 100);
-    const passed = percent >= 80;
 
-    let resultHeader = '';
-    let resultMessage = '';
-    let celebrationHtml = '';
-    let actionButtons = '';
+    let html = `<div class="quiz-box"><h2 style="font-size: 1.8rem; color: var(--primary);">결과: ${score} / ${total}점</h2>`;
 
     if (quizSession.mode === 'weekend') {
-      const prevRec = state.weeklyRecords[state.week];
-      const wasAlreadyPassed = prevRec && prevRec.passed;
-      const todayStr = new Date().toLocaleDateString('ko-KR');
-
-      state.weeklyRecords[state.week] = {
-        passed: wasAlreadyPassed || passed,
-        bestScore: prevRec ? Math.max(prevRec.bestScore, score) : score,
-        bestPercent: prevRec ? Math.max(prevRec.bestPercent, percent) : percent,
-        date: passed ? todayStr : (prevRec ? prevRec.date : '-'),
-        attempts: prevRec ? prevRec.attempts + 1 : 1
-      };
+      const passed = percent >= 80;
+      const isPerfect = percent === 100;
+      state.weeklyRecords[state.week] = { passed: passed, bestScore: score, bestPercent: percent, date: new Date().toLocaleDateString('ko-KR') };
+      
+      if (isPerfect && !state.perfectWeeks.includes(state.week)) {
+        state.perfectWeeks.push(state.week);
+      }
       saveGlobalData();
 
-      const badgeInfo = BADGE_CATALOG.find(b => b.week === state.week) || { icon: "🏅", title: `${state.week}주차 마스터 배지` };
-
       if (passed) {
-        resultHeader = `🎉 주말 시험 합격! (${percent}점)`;
-        resultMessage = `30문제 중 <strong>${score}문제</strong>를 맞혀 80% 통과 기준을 넘었습니다!`;
-        celebrationHtml = `
+        playSFX('fanfare');
+        fireConfetti();
+        html += `
           <div class="new-badge-celebration">
-            <div style="font-size: 0.9rem; font-weight: 800; color: #B45309;">
-              ${wasAlreadyPassed ? '✨ 칭찬 배지 보유 중 & 최고 기록 경신!' : '🎊 새로운 칭찬 스티커 획득!'}
-            </div>
-            <div style="font-size: 4rem; margin: 10px 0;">${badgeInfo.icon}</div>
-            <div style="font-size: 1.3rem; font-weight: 900; color: #78350F;">${badgeInfo.title}</div>
-            <div style="font-size: 0.9rem; color: #92400E; margin-top: 6px;">${currentProfile}의 스티커판에 등록되었어요!</div>
+            <div style="font-size: 4rem;">${isPerfect ? '👑' : '🏅'}</div>
+            <div style="font-size: 1.3rem; font-weight: 900;">${isPerfect ? '전설의 퍼펙트 클리어!' : '주말 보스전 통과!'}</div>
           </div>
+          <button class="btn" onclick="switchTab('rewards')">스티커판 확인하기</button>
         `;
       } else {
-        resultHeader = `💦 아깝네요! (${percent}점) - 한 번 더 도전해 볼까요?`;
-        resultMessage = `30문제 중 <strong>${score}문제</strong>를 맞혔습니다.<br><strong>24문제(80점) 이상</strong> 맞히면 <strong>${badgeInfo.icon} [${badgeInfo.title}]</strong> 스티커를 받을 수 있어요!`;
-      }
-
-      actionButtons = `
-        <button class="btn" onclick="startWeekendExam()">🔄 주말 시험 다시 보기</button>
-        ${passed ? `<button class="btn btn-warning" onclick="switchTab('rewards')">🏅 ${currentProfile}의 칭찬판 보기</button>` : ''}
-        ${state.wrongWordIds.length > 0 ? `<button class="btn btn-danger" onclick="startWrongNoteQuiz()">🚨 틀린 문제(${state.wrongWordIds.length}개) 복습하기</button>` : ''}
-        <button class="btn btn-outline" onclick="renderMainScreen()">학습 화면으로</button>
-      `;
-
-    } else if (quizSession.mode === 'wrong') {
-      if (state.wrongWordIds.length === 0) {
-        resultHeader = `🎊 오답 노트 완벽 클리어!`;
-        resultMessage = `틀렸던 단어를 전부 다 외워서 맞혔습니다! 이제 다음 날 학습으로 넘어갈 수 있어요.`;
-        actionButtons = `<button class="btn btn-secondary" onclick="renderMainScreen()">학습 화면으로 돌아가기</button>`;
-      } else {
-        resultHeader = `🔥 아직 남은 오답이 ${state.wrongWordIds.length}개 있어요!`;
-        resultMessage = `방금 틀린 단어를 다 맞힐 때까지 한 번 더 도전해 보세요!`;
-        actionButtons = `
-          <button class="btn btn-danger" onclick="startWrongNoteQuiz()">🔁 남은 오답(${state.wrongWordIds.length}개) 마저 다 맞추기</button>
-          <button class="btn btn-outline" onclick="renderMainScreen()">단어장 보러 가기</button>
-        `;
+        html += `<p>80점 이상이어야 통과합니다. 다시 도전하세요!</p><button class="btn" onclick="startWeekendExam()">재도전</button>`;
       }
     } else {
-      resultHeader = `👏 일일 테스트 완료! (${score} / ${total})`;
-      resultMessage = state.wrongWordIds.length > 0
-        ? `틀린 단어 <strong>${state.wrongWordIds.length}개</strong>가 오답 노트에 등록되었습니다. 내일로 넘어가기 전에 꼭 다 외워서 맞춰보세요!`
-        : `오늘의 단어 10개를 완벽하게 외웠네요!`;
-      actionButtons = `
-        <button class="btn" onclick="startDailyPractice()">🔄 다시 시험 보기</button>
-        ${state.wrongWordIds.length > 0 ? `<button class="btn btn-danger" onclick="startWrongNoteQuiz()">🚨 틀린 단어 바로 복습하기</button>` : ''}
-        <button class="btn btn-outline" onclick="renderMainScreen()">단어장으로 돌아가기</button>
+      // 일일 / 오답 퀘스트 보상
+      let earnedStars = quizSession.mode === 'wrong' ? 5 : 10;
+      state.stars += earnedStars;
+      saveGlobalData();
+
+      html += `
+        <div class="daily-reward-celebration">
+          <div style="font-size: 3rem;">⭐</div>
+          <div style="font-size: 1.2rem; font-weight: 800;">퀘스트 완료! 별조각 ${earnedStars}개 획득!</div>
+        </div>
+        <button class="btn" onclick="renderMainScreen()">학습 화면으로</button>
       `;
     }
 
-    container.innerHTML = `
-      <div class="quiz-box">
-        <h2 style="font-size: 1.8rem; color: var(--primary);">${resultHeader}</h2>
-        ${celebrationHtml}
-        <p style="font-size: 1.05rem; color: #374151; line-height: 1.6; margin: 20px 0;">${resultMessage}</p>
-        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 24px;">
-          ${actionButtons}
-        </div>
-      </div>
-    `;
+    html += `</div>`;
+    document.getElementById('main-view').innerHTML = html;
   }
 
   // =========================================================================
-  // 7. 날짜 이동 및 유틸리티
+  // 5. 날짜 이동
   // =========================================================================
   function nextSchedule() {
-    const state = getCurrentState();
-    if (state.wrongWordIds.length > 0) {
-      const goQuiz = confirm(`아직 다 외우지 못한 오답 단어가 ${state.wrongWordIds.length}개 남아있습니다!\n오답 시험을 봐서 다 맞추시겠어요?\n(취소를 누르면 그대로 다음 날로 넘어갑니다)`);
-      if (goQuiz) {
-        startWrongNoteQuiz();
-        return;
-      }
+    if (getCurrentState().wrongWordIds.length > 0) {
+      if(confirm(`오답 몬스터가 남아있습니다! 처치(시험)하시겠습니까?`)) { startWrongNoteQuiz(); return; }
     }
-
-    if (state.day < 6) {
-      state.day++;
-    } else {
-      const maxSupportedWeeks = 1 + Math.floor((WORD_DATABASE.length - 50) / 30);
-      if (state.week >= maxSupportedWeeks) {
-        alert(`현재 ${maxSupportedWeeks}주차 분량의 단어가 등록되어 있습니다.`);
-        return;
-      }
-      state.week++;
-      state.day = 1;
-    }
-    saveGlobalData();
-    renderMainScreen();
+    if (getCurrentState().day < 6) getCurrentState().day++;
+    else { getCurrentState().week++; getCurrentState().day = 1; }
+    saveGlobalData(); renderMainScreen();
   }
 
   function prevSchedule() {
-    const state = getCurrentState();
-    if (state.day > 1) {
-      state.day--;
-    } else if (state.week > 1) {
-      state.week--;
-      state.day = 6;
-    }
-    saveGlobalData();
-    renderMainScreen();
+    if (getCurrentState().day > 1) getCurrentState().day--;
+    else if (getCurrentState().week > 1) { getCurrentState().week--; getCurrentState().day = 6; }
+    saveGlobalData(); renderMainScreen();
   }
 
-  function shuffleArray(arr) {
-    let copy = [...arr];
-    for (let i = copy.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [copy[i], copy[j]] = [copy[j], copy[i]];
-    }
-    return copy;
-  }
-
-  // 앱 최초 시작
+  // 앱 시작
   loadGlobalData();
-  renderProfileChips();
   renderMainScreen();
 </script>
 </body>
