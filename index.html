@@ -278,7 +278,8 @@
   ];
 
   // =========================================================================
-  // 2. 다마고치 프로필 시스템 & 앱 상태
+  // =========================================================================
+  // 2. 다마고치 프로필 시스템 & 앱 상태 (여기서부터 맨 끝까지 덮어쓰세요!)
   // =========================================================================
   let profiles = ["첫째 아이"];
   let currentProfile = "첫째 아이";
@@ -287,12 +288,26 @@
 
   let quizSession = { mode: 'daily', questions: [], currentIndex: 0, score: 0, comboCount: 0, wrongIdsInThisQuiz: [] };
 
+  // [오류 수정됨] 새로고침 시 프로필 불러오기 함수
   function loadGlobalData() {
     const savedProfiles = localStorage.getItem('elem_vocab_profiles');
-    if (savedProfiles) profiles = JSON.parse(savedProfiles);
+    if (savedProfiles) {
+      try {
+        const parsed = JSON.parse(savedProfiles);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          profiles = parsed;
+        }
+      } catch (e) {
+        profiles = ["첫째 아이"];
+      }
+    }
+
     const savedCurrent = localStorage.getItem('elem_vocab_current_profile');
-    if (savedCurrent && profiles.includes(savedCurrent)) currentProfile = savedCurrent;
-    else currentProfile = profiles[0] || "첫째 아이";
+    if (savedCurrent && profiles.includes(savedCurrent)) {
+      currentProfile = savedCurrent;
+    } else {
+      currentProfile = profiles[0];
+    }
 
     profiles.forEach(p => {
       const pData = localStorage.getItem(`elem_vocab_data_${p}`);
@@ -301,10 +316,12 @@
       } else {
         allProfilesData[p] = { week: 1, day: 1, wrongWordIds: [], dailySchedules: {}, weeklyRecords: {}, stars: 0, perfectWeeks: [] };
       }
-      // 마이그레이션(업데이트) - 기존 유저용
       if (allProfilesData[p].stars === undefined) allProfilesData[p].stars = 0;
       if (allProfilesData[p].perfectWeeks === undefined) allProfilesData[p].perfectWeeks = [];
     });
+
+    localStorage.setItem('elem_vocab_profiles', JSON.stringify(profiles));
+    localStorage.setItem('elem_vocab_current_profile', currentProfile);
   }
 
   function saveGlobalData() {
@@ -317,7 +334,7 @@
 
   function getCurrentState() { return allProfilesData[currentProfile]; }
 
-  // 다마고치 몬스터 진화 로직 (배지 개수에 따라 이모티콘 변경)
+  // 다마고치 몬스터 진화 로직
   function getMonsterIcon(badgeCount) {
     if (badgeCount < 1) return { icon: "🥚", name: "초보 알" };
     if (badgeCount < 3) return { icon: "🐣", name: "아기 공룡" };
@@ -328,6 +345,7 @@
 
   function getUnlockedBadgeCount(profileName = currentProfile) {
     const state = allProfilesData[profileName];
+    if (!state) return 0;
     return Object.values(state.weeklyRecords || {}).filter(r => r && r.passed).length;
   }
 
@@ -348,6 +366,26 @@
     switchProfile(newName.trim());
   }
 
+  // [새로 추가됨] 중복 생성된 플레이어 삭제(✕) 기능
+  function deleteProfile(event, profileName) {
+    event.stopPropagation();
+    if (profiles.length <= 1) {
+      alert("최소 1명의 플레이어는 남아있어야 합니다.");
+      return;
+    }
+    if (confirm(`[${profileName}] 플레이어를 삭제할까요?`)) {
+      profiles = profiles.filter(p => p !== profileName);
+      localStorage.removeItem(`elem_vocab_data_${profileName}`);
+      delete allProfilesData[profileName];
+      if (currentProfile === profileName) {
+        currentProfile = profiles[0];
+      }
+      saveGlobalData();
+      if (currentTab === 'rewards') renderRewardsScreen();
+      else renderMainScreen();
+    }
+  }
+
   function resetCurrentProfileData() {
     if (confirm(`[${currentProfile}]의 학습 기록과 스티커, 몬스터를 초기화할까요?`)) {
       allProfilesData[currentProfile] = { week: 1, day: 1, wrongWordIds: [], dailySchedules: {}, weeklyRecords: {}, stars: 0, perfectWeeks: [] };
@@ -356,15 +394,18 @@
     }
   }
 
+  // [오류 수정됨] 상단 플레이어 버튼 그리기
   function renderProfileChips() {
     const container = document.getElementById('profile-chips-container');
+    if (!container) return;
     container.innerHTML = profiles.map(p => {
       const badgeCount = getUnlockedBadgeCount(p);
       const monster = getMonsterIcon(badgeCount);
-      const stars = allProfilesData[p].stars || 0;
+      const stars = (allProfilesData[p] && allProfilesData[p].stars) ? allProfilesData[p].stars : 0;
       const isActive = p === currentProfile;
       return `<button class="profile-chip ${isActive ? 'active' : ''}" onclick="switchProfile('${p}')">
                 <span style="font-size: 1.2rem;">${monster.icon}</span> ${p} <span class="daily-stars-badge">⭐${stars}</span>
+                ${profiles.length > 1 ? `<span onclick="deleteProfile(event, '${p}')" style="margin-left:4px; opacity:0.6; font-size:0.8rem;" title="플레이어 삭제">✕</span>` : ''}
               </button>`;
     }).join('');
   }
@@ -393,7 +434,7 @@
       const newWords = WORD_DATABASE.slice(newStartIndex, newStartIndex + 6);
       let prevWeekPoolIds = [];
       for (let d = 1; d <= 5; d++) { getWordsForDay(week - 1, d).forEach(pw => { if (!prevWeekPoolIds.includes(pw.word.id)) prevWeekPoolIds.push(pw.word.id); }); }
-      let availableReviewIds = prevWeekPoolIds; // 단순화
+      let availableReviewIds = prevWeekPoolIds;
       const shuffledReview = [...availableReviewIds].sort(() => Math.random() - 0.5).slice(0, 4);
       result = [...newWords.map(w => ({ id: w.id, isReview: false })), ...shuffledReview.map(id => ({ id: id, isReview: true }))];
     }
@@ -402,7 +443,7 @@
   }
 
   function speakWord(text) {
-    initAudio(); // 첫 클릭 시 오디오 권한 확보
+    initAudio();
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
@@ -595,18 +636,17 @@
       quizSession.comboCount++;
       feedbackEl.innerHTML = `<div class="feedback-msg feedback-correct">⭕ 정답입니다!</div>`;
       
-      // 콤보 이펙트 실행
       if (quizSession.comboCount >= 2) {
         comboEl.innerHTML = `<div class="combo-text">🔥 ${quizSession.comboCount} COMBO!</div>`;
         comboEl.style.animation = 'none';
-        void comboEl.offsetWidth; // 리플로우 강제 (애니메이션 재시작)
+        void comboEl.offsetWidth;
         comboEl.style.animation = 'comboPop 1.5s forwards';
       }
 
       if (quizSession.mode === 'wrong') { state.wrongWordIds = state.wrongWordIds.filter(id => id !== q.word.id); saveGlobalData(); }
     } else {
       playSFX('wrong');
-      quizSession.comboCount = 0; // 콤보 초기화
+      quizSession.comboCount = 0;
       comboEl.style.animation = 'none';
       feedbackEl.innerHTML = `<div class="feedback-msg feedback-wrong">❌ 오답! 정답: <strong>${q.word.en}</strong></div>`;
       if (!state.wrongWordIds.includes(q.word.id)) { state.wrongWordIds.push(q.word.id); saveGlobalData(); }
@@ -651,7 +691,6 @@
         html += `<p>80점 이상이어야 통과합니다. 다시 도전하세요!</p><button class="btn" onclick="startWeekendExam()">재도전</button>`;
       }
     } else {
-      // 일일 / 오답 퀘스트 보상
       let earnedStars = quizSession.mode === 'wrong' ? 5 : 10;
       state.stars += earnedStars;
       saveGlobalData();
@@ -687,8 +726,9 @@
     saveGlobalData(); renderMainScreen();
   }
 
-  // 앱 시작
+  // 앱 시작 (여기서 새로고침 시 프로필 칩을 바로 그려줍니다!)
   loadGlobalData();
+  renderProfileChips();
   renderMainScreen();
 </script>
 </body>
